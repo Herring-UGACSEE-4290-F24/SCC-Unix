@@ -10,6 +10,7 @@ output [31:0]   data_addr       // address pointed to in data memory
 output [31:0]   data_out        // data to write to memory
 output          data_read       // control reading data
 output          data_write      // control writing data
+===========
 
 === TestBench ===
 wire            clk             // clock signal
@@ -17,12 +18,14 @@ wire            reset           // reset signal
 wire [31:0]     instruction     // instruction to be executed     
 
 reg [31:0]      results         // results of SCC (what gets written to data memory)
+=================
 
 === Instruction Memory ===
 input           clk             // clock signal
 input [31:0]    address         // register location
 
 output [31:0]   instruction     // instruction to be executed
+==========================
 
 === Data/Results Memory ===
 input           clk             // clock signal
@@ -31,3 +34,4 @@ input           write           // input enable
 input [31:0]    address         // register location
 
 output [31:0]   data            // stored data in [address]
+===========================
