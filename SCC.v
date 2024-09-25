@@ -1,4 +1,4 @@
-module SCC_Wrapper (clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_out, data_read, data_write)
+module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_out, data_read, data_write)
 begin
 
     input           clk;             // main clock signal
