@@ -1,5 +1,4 @@
-module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_out, data_read, data_write)
-begin
+module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_out, data_read, data_write);
 
     input           clk;             // main clock signal
     input           reset;           // sets all regs to known state
@@ -13,4 +12,4 @@ begin
     output          data_read;       // control reading data
     output          data_write;      // control writing data
 
-end
+endmodule

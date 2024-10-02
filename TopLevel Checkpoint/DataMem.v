@@ -1,5 +1,4 @@
-module DataMem(clk, read, write, address, data)
-begin
+module DataMem(clk, read, write, address, data);
 
     input           clk             // clock signal
     input           read            // output enable
@@ -8,4 +7,4 @@ begin
 
     output [31:0]   data            // stored data in [address]
 
-end
+endmodule
