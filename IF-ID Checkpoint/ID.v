@@ -62,6 +62,9 @@ module ID(instruction);
          */
 
         //PLAN: make each instruction set EVERY output, even the unused ones to x
+        // DATA MUXES ARE NOT TO BE IN THE ID
+        // MAYBE change regs to wires with assign statements; REMEMBER THIS IS A SINGLE-CYCLE that means that instruction comes in and
+        //   is completed within 1 clock cycle
         case (instruction[31:25])
             LOAD: begin
                 // destination register -> write address on register file
