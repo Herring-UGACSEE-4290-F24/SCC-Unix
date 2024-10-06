@@ -2,7 +2,7 @@
  * This module defines the Instruction Fetch (IF) implementation by the Linux SCC group. IF keeps track
  * of the program counter (PC) which points to a word address in Instruction Memory (IM). 
  */
-module IF(clk, b_relAddr, b_absAddr, b_cond, b_abs, offset, pc);
+module IF(clk, b_relAddr, b_absAddr, b_cond, b_abs, offset, instruction_in, instruction_out, pc);
 
     input               clk;            // Clock signal
     input               b_cond;         // Branch Condition Status
@@ -10,6 +10,9 @@ module IF(clk, b_relAddr, b_absAddr, b_cond, b_abs, offset, pc);
     input [15:0]        b_relAddr;      // Amount to branch relative to current PC
     input [31:0]        b_absAddr;      // Address to branch to on absolute branch (to value in register)
     input [15:0]        offset;         // Optional offset for the branch address
+
+    input [31:0] instruction_in;
+    output [31:0] instruction_out;
 
     output reg [31:0]   pc;             // Program Counter: points to an address in instruction memory
 

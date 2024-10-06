@@ -7,21 +7,21 @@ module ID(instruction);
     input [31:0]    instruction;    // Instruction passed in from Instruction Memory    
 
 
-    reg [1:0]        fld;           // first-level-decode, bits 31-30
-    reg              s;             // special single bit for data instructions, bits 29
-    reg [3:0]        sld;           // single-level-decode, bits 28-25
+    wire [1:0]        fld;           // first-level-decode, bits 31-30
+    wire              s;             // special single bit for data instructions, bits 29
+    wire [3:0]        sld;           // single-level-decode, bits 28-25
     output reg [2:0] alu_oc;        // opcode for ALU, bits 27-25
 
-    reg [2:0]        dest_reg;      // destination register, bits 24-22
-    reg [2:0]        mem_ptr_reg;   // pointer register for memory instructions, bits 21-19
-    reg [2:0]        br_ptr_reg;    // branch pointer, bits 24-22
-    reg [15:0]       offset;        // offset, bits 15-0
-    reg [2:0]        src_reg;       // register to store source address, bits 24-22
-    reg [15:0]       imm;           // immediate value, bits 15-0
-    reg [2:0]        op_1_reg;      // operand one, bits 21-19
-    reg [2:0]        op_2_reg;      // operand two, bits 18-16    
-    reg [2:0]        shift_amt_reg; // register that stores shift amount, bits 21-19
-    reg [3:0]        cond_flags;    // condition flags for branching, bits 24-21
+    wire [2:0]        dest_reg;      // destination register, bits 24-22
+    wire [2:0]        mem_ptr_reg;   // pointer register for memory instructions, bits 21-19
+    wire [2:0]        br_ptr_reg;    // branch pointer, bits 24-22
+    wire [15:0]       offset;        // offset, bits 15-0
+    wire [2:0]        src_reg;       // register to store source address, bits 24-22
+    wire [15:0]       imm;           // immediate value, bits 15-0
+    wire [2:0]        op_1_reg;      // operand one, bits 21-19
+    wire [2:0]        op_2_reg;      // operand two, bits 18-16    
+    wire [2:0]        shift_amt_reg; // register that stores shift amount, bits 21-19
+    wire [3:0]        cond_flags;    // condition flags for branching, bits 24-21
 
     /*
      * The following are the instructions defined as thier begining 7-bit encoding.
@@ -41,20 +41,20 @@ module ID(instruction);
          * The following statements will save each 
          * of the bit strings for possible parameters
          */
-        fld =           instruction[31:30];
-        s =             instruction[29];
-        sld =           instruction[28:25];
-        alu_oc =        instruction[27:25];
-        dest_reg =      instruction[24:22];
-        mem_ptr_reg =   instruction[21:19];
-        br_ptr_reg =    instruction[24:21];
-        offset =        instruction[15:0];
-        src_reg =       instruction[24:22];
-        imm =           instruction[15:0];
-        op_1_reg =      instruction[21:19];
-        op_2_reg =      instruction[18:16];
-        shift_amt_reg = instruction[21:19];
-        cond_flags =    instruction[24:21];
+        assign fld =           instruction[31:30];
+        assign s =             instruction[29];
+        assign sld =           instruction[28:25];
+        assign alu_oc =        instruction[27:25];
+        assign dest_reg =      instruction[24:22];
+        assign mem_ptr_reg =   instruction[21:19];
+        assign br_ptr_reg =    instruction[24:21];
+        assign offset =        instruction[15:0];
+        assign src_reg =       instruction[24:22];
+        assign imm =           instruction[15:0];
+        assign op_1_reg =      instruction[21:19];
+        assign op_2_reg =      instruction[18:16];
+        assign shift_amt_reg = instruction[21:19];
+        assign cond_flags =    instruction[24:21];
 
         /*
          * Case statement to check the most significant 7-bits 
