@@ -24,8 +24,10 @@ module ID(instruction);
     wire [3:0]        cond_flags;    // condition flags for branching, bits 24-21
 
     /*
-     * The following are the instructions defined as thier begining 7-bit encoding.
-     * In our encoding, "Don't cares" are to be treated as 0s
+     * The following are the (34) instructions defined as thier begining 7-bit encoding.
+     * In our encoding, "Don't cares" are to be treated as 0s. // DOUBLE CHECK WITH ASSEMBLER
+     * 
+     * NOTE that B and BR should never be seen in the ID, they should be handled in IF.
      */
     parameter LOAD  = 'b1000000, STOR  = 'b1000001, MOV   = 'b0000000, MOVT  = 'b0000001, ADD   = 'b0010001;
     parameter ADDS  = 'b0011001, SUB   = 'b0010010, SUBS  = 'b0011010, AND   = 'b0010011, ANDS  = 'b0011011;
