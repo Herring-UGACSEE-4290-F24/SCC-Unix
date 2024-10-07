@@ -41,4 +41,3 @@ endmodule
 // Change to the other layout, where instructions are returned back to here, the IF
 
 // Then we can check for unconditional branches, and immediately handle them so that ID doesn't see a b
-// Won't need the b_abs boolean because the conditional branches can't be absolute
