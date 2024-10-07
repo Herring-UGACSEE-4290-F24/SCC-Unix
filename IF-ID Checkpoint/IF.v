@@ -2,11 +2,10 @@
  * This module defines the Instruction Fetch (IF) implementation by the Linux SCC group. IF keeps track
  * of the program counter (PC) which points to a word address in Instruction Memory (IM). 
  */
-module IF(clk, b_relAddr, b_absAddr, b_cond, b_abs, offset, instruction_in, instruction_out, pc);
+module IF(clk, b_relAddr, b_cond, offset, instruction_in, instruction_out, pc);
 
     input               clk;            // Clock signal
-    input               b_cond;         // Branch Condition Status
-    input               b_abs;          // Branch is Absolute or not, i.e. branch to target addr
+    input               b_cond;         // Branch Condition StatusS
     input [15:0]        b_relAddr;      // Amount to branch relative to current PC
     input [31:0]        b_absAddr;      // Address to branch to on absolute branch (to value in register)
     input [15:0]        offset;         // Optional offset for the branch address
@@ -16,22 +15,24 @@ module IF(clk, b_relAddr, b_absAddr, b_cond, b_abs, offset, instruction_in, inst
 
     output reg [31:0]   pc;             // Program Counter: points to an address in instruction memory
 
-    always @(posedge clk)               // Ensures that PC only changes on rising clock edge
-    begin
+    always @(posedge clk) begin
 
-        if (b_cond)                        // check if branch condition is met i.e. the b_cond flag is set by execution stage
-        begin
-            if (b_abs)                     // check if absolute  branch
+        if (instruction_in[31:25] == 'b1100000) begin            // B instruction
+            pc <= pc + instruction_in[15:0];                     // make sure is signed and adds correctly etc (sign extend?)
+            instruction_out <= NOP;
+        end else if (instruction_in[31:25] == 'b1100010) begin   // BR instruction
+            pc <=                                                // change to address in register
+            instruction_out <= NOP;
+        end else begin
+            instruction_out <= instruction_in;
+            if (b_cond)
             begin
-                pc = b_absAddr + offset;   // if abs branch, then set pc = target address
-            end else                       // else, then relative branch
+                pc <= pc + (4 * b_relAddr);
+            end else
             begin
-                pc = pc + (4 * b_relAddr); // relative address is shifted left by 2 bits and pc is set to this value
+                pc <= pc + 4;
             end
-        end else                           // branch condition not met i.e. no branch
-        begin
-            pc = pc + 4;                   // incrementing, pc by 4 bytes 
-        end
+        end 
 
     end
 
