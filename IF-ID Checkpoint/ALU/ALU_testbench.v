@@ -1,7 +1,7 @@
 module ALU_testbench();
 
 reg [31:0] operand1_s, operand2_s;
-wire [31:0] result_s;
+wire [32:0] result_s;
 reg clk_s, rst_s, en_s;
 wire overflow_s;
 reg [2:0] opcode_s;
