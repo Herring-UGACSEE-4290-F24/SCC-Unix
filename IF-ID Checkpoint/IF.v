@@ -20,9 +20,9 @@ module IF(clk, b_relAddr, b_cond, instruction_in, instruction_out, pc);
     always @(posedge clk) begin
 
         if (instruction_in[31:25] == 'b1100000) begin            // B instruction
-            offset[31:18] = {14{instruction_in[15]}};            // Duplicates the msb (sign extension) | ALSO SHIFTS 2 BITS
-            offset[17:2] = instruction_in[15:0];                 // Copying the immediate value | ALSO SHIFTS 2 BITS
-            offset[1:0] = 0;                                     // Finishes the left shift
+            offset[31:16] = {16{instruction_in[15]}};            // Duplicates the msb (sign extension)
+            offset[15:0] = instruction_in[15:0];                 // Copying the immediate value
+            offset = offset * 4;                                 // Left shifts (4 byte alligned)
             pc <= pc + offset;                                   // adds the offset to the pc
             instruction_out <= NOP;                              // NOPs the instruction that would be executed
         end else if (instruction_in[31:25] == 'b1100010) begin   // BR instruction
