@@ -22,10 +22,15 @@ module IF(clk, b_relAddr, b_cond, instruction_in, instruction_out, pc);
         if (instruction_in[31:25] == 'b1100000) begin            // B instruction
             offset[31:16] = {16{instruction_in[15]}};            // Duplicates the msb (sign extension)
             offset[15:0] = instruction_in[15:0];                 // Copying the immediate value
-            offset = offset * 4;                                 // Left shifts (4 byte alligned)
+            offset = offset * 4 ;                                 // Left shifts (4 byte alligned)
             pc <= pc + offset;                                   // adds the offset to the pc
             instruction_out <= NOP;                              // NOPs the instruction that would be executed
         end else if (instruction_in[31:25] == 'b1100010) begin   // BR instruction
+            // NEED TO CHECK: if the register being jumped to is being UPDATED in the instruction currently being executed
+            // -> just grab the value 
+            // EX: ADDS R0, R0, 1
+            //     BR R0
+            // Allowed to have more than 2 ports of reading on the register file
             pc <=                                                // change to address in  +/- the offset
             instruction_out <= NOP;
         end else begin                                           // When not a branch instruction

@@ -23,3 +23,11 @@ module Reg_File(read_addr1, read_addr2, write_addr, write_value, write_enable, c
     end
 
 endmodule
+
+/*
+ * Reg 7 in the user accessible will be the Zero Register
+ *
+ * Separate registers for reserved (8 new regs) NOT USER ACCESSIBLE
+ * Reg 7 should be CPSR -> (Formatted as ARMv8 is)
+ * Reg 6 will be pc
+ */
