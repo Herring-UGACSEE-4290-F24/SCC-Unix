@@ -8,7 +8,7 @@ input [31:0] operand1;
 input [31:0] operand2;
 
 // ALU outputs
-output reg [31:0] result;
+output reg [32:0] result;
 output reg overflow;
 
 // ALU Operation Commands
@@ -40,13 +40,13 @@ always @(*) begin
                 // Addition
                 ADD: begin
                     result <= operand1 + operand2;
-                    overflow <= (~operand1[31] & ~operand2[31] & result[31]) | (operand1[31] & operand2[31] & ~result[31]);
+                    overflow <= result[32];
                 end
 
                 // Subtraction
                 SUB: begin
                     result <= operand1 - operand2;
-                    overflow <= (~operand1[31] & operand2[31] & result[31]) | (operand1[31] & ~operand2[31] & ~result[31]);
+                    overflow <= result[32];
                 end
 
                 // Bitwise AND
