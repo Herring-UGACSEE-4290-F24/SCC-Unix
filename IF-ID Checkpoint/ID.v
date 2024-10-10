@@ -96,14 +96,14 @@ module ID(clk, instruction);
                 read_addr1 = dest_reg;                  // destination register -> read address on register file
                 write_addr = dest_reg;                  // destination register -> write address on register file
                 write_data[31:16] = value1[31:16];      // copy value from most significant 2 bytes to remain constant
-                write_data[15:0] = imm[15:0];     // immediate -> write_data on register file, stores into the least significant 2 bytes
+                write_data[15:0] = imm[15:0];           // immediate -> write_data on register file, stores into the least significant 2 bytes
                 write_enable = 1;                       // enable write on register file
             end
             MOVT: begin
                 read_addr1 = dest_reg;                  // destination register -> read address on register file
                 write_addr = dest_reg;                  // destination register -> write address on register file
                 write_data[15:0] = value1[15:0];        // copy value from least significant 2 bytes to remain constant
-                write_data[31:0] = imm[15:0];     // immediate -> write_data on register file, stores into the most significant 2 bytes
+                write_data[31:16] = imm[15:0];          // immediate -> write_data on register file, stores into the most significant 2 bytes
                 write_enable = 1;                       // enable write on register file
             end
             ADD: begin

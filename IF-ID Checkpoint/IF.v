@@ -84,6 +84,7 @@ module IF(clk, b_cond, b_relAddr, write_enable, write_addr, write_value, br_valu
             if (b_cond)                         // If conditional branch is decoded AND taken (signal sent from ID)
             begin
                 pc <= pc + (4 * b_relAddr);     // Branch according to the conditional branch statement
+                // maybe have to NOP an instruction???
             end else
             begin                               // Otherwise, no branches are being taken
                 pc <= pc + 4;                   // Increment the PC (4 byte alligned)
