@@ -38,14 +38,21 @@ module IF(clk, b_cond, b_relAddr, write_enable, write_addr, write_value, br_valu
         offset = offset * 4 ;                              // Left shifts (4 byte alligned)
     // =================================================== //
 
-        if (instruction_in[31:25] == 'b1100000)             // B instruction //
+    // FOR HANDLING BRANCHES THAT ARE UNCONDITIONAL //
+    // ============================================ //
+    // The B instructions will need to add or sub   //
+    // from the current program counter value while //
+    // BR will need to access the registers through //
+    // using the inputs/outputs on the module.      //
+    // - - - - - - - - - - - - - - - - - - - - - -  //
+        if (instruction_in[31:25] == 'b1100000)                 // B instruction //
         begin
 
             instruction_out = prefetch;         // Feeds the prefetched instruction to the ID
             prefetch = NOP;                     // Stores a NOP as the prefetched instruction
             pc <= pc + offset;                  // update the pc based on the instruction's offset
 
-        end else if (instruction_in[31:25] == 'b1100010)    // BR instruction //
+        end else if (instruction_in[31:25] == 'b1100010)        // BR instruction //
         begin
 
             instruction_out = prefetch;         // Feeds the prefetched instruction to the ID
@@ -58,8 +65,18 @@ module IF(clk, b_cond, b_relAddr, write_enable, write_addr, write_value, br_valu
             end else begin                      // Otherwise, there is no hazard is accessing a value to read
                 pc <= br_value + offset;        // Update pc to address in the register pointed to by br_addr +/- the offset
             end
+    // ============================================ //
 
-        end else                                            // Not B or BR // 
+    // FOR HANDLING CONDITIONAL AND NON BRANCH INSTRUCTIONS //
+    // ==================================================== //
+    // The instructions that are conditional branches will  //
+    // be passed through and handled by the ID, but the pc  //
+    // will get updated through a signal sent to the IF by  //
+    // the ID, and will then update the value based on the  //
+    // value in the instruction. All other instruction will //
+    // implement the pc as normal (4 bytes per instruction) //
+    // - - - - - - - - - - - - - - - - - - - - - - - - - -  //
+        end else                                                // Not B or BR // 
         begin
 
             instruction_out = prefetch;         // Feeds the prefetched instruction to the ID
@@ -75,5 +92,6 @@ module IF(clk, b_cond, b_relAddr, write_enable, write_addr, write_value, br_valu
         end 
 
     end
+    // ==================================================== //
 
 endmodule
