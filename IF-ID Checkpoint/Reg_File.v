@@ -8,15 +8,16 @@ module Reg_File(read_addr1, read_addr2, br_addr, write_addr, write_value, write_
 
     input clk;                              // Static design requires a clock
 
-    output reg [31:0] value1, value2;       // Values retrieved from registers at read_addr1 and read_addr2
-    output reg [31:0] br_value;             // Value for the BR instruction to branch to    
+    output wire [31:0] value1, value2;      // Values retrieved from registers at read_addr1 and read_addr2
+    output wire [31:0] br_value;            // Value for the BR instruction to branch to    
 
     reg [31:0] registers [0:7];             // Acutal register layout (8 registers that are 32 bits long)
 
-    always @(posedge clk) begin
+    assign value1 = registers[read_addr1];  // Read value in register pointed at by read_addr1
+    assign value2 = registers[read_addr2];  // Read value in register pointed at by read_addr2
+    assign br_value = registers[br_addr];   // Read value in register pointed at by br_addr
 
-        value1 <= registers[read_addr1];           // Read value in register pointed at by read_addr1
-        value2 <= registers[read_addr2];           // Read value in register pointed at by read_addr2
+    always @(posedge clk) begin
 
         if (write_enable) begin                    // When the write_enable is HIGH
             registers[write_addr] <= write_value;  // Store write_value in register at address write_addr
