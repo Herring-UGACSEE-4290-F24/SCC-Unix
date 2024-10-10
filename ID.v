@@ -107,14 +107,14 @@ module ID(clk, instruction);
                 write_enable = 1;                       // enable write on register file
             end
             ADD: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
                 // destination register -> write address on register file
                 // enable read and write on register
             end
             ADDS: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
                 // destination register -> write address on register file
@@ -122,14 +122,14 @@ module ID(clk, instruction);
                 // enable flags to be set
             end
             SUB: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
                 // destination register -> write address on register file
                 // enable read and write on register
             end
             SUBS: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
                 // destination register -> write address on register file
@@ -137,14 +137,14 @@ module ID(clk, instruction);
                 // enable flags to be set
             end
             AND: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
                 // destination register -> write address on register file
                 // enable read and write on register
             end
             ANDS: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
                 // destination register -> write address on register file
@@ -152,14 +152,14 @@ module ID(clk, instruction);
                 // enable flags to be set
             end
             OR: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
                 // destination register -> write address on register file
                 // enable read and write on register
             end
             ORS: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
                 // destination register -> write address on register file
@@ -167,14 +167,14 @@ module ID(clk, instruction);
                 // enable flags to be set
             end
             XOR: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
                 // destination register -> write address on register file
                 // enable read and write on register
             end
             XORS: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
                 // destination register -> write address on register file
@@ -198,14 +198,14 @@ module ID(clk, instruction);
                 write_enable = 1;                       // enable write on register file
             end
             ADD2: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
                 // enable read and write on register
             end
             ADDS2: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
@@ -213,14 +213,14 @@ module ID(clk, instruction);
                 // enable flags to be set
             end
             SUB2: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
                 // enable read and write on register
             end
             SUBS2: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
@@ -228,14 +228,14 @@ module ID(clk, instruction);
                 // enable flags to be set
             end
             AND2: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
                 // enable read and write on register
             end
             ANDS2: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
@@ -243,14 +243,14 @@ module ID(clk, instruction);
                 // enable flags to be set
             end
             OR2: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
                 // enable read and write on register
             end
             ORS2: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
@@ -258,14 +258,14 @@ module ID(clk, instruction);
                 // enable flags to be set
             end
             XOR2: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
                 // enable read and write on register
             end
             XORS2: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
@@ -273,20 +273,20 @@ module ID(clk, instruction);
                 // enable flags to be set
             end
             NOT: begin
-                // alu_oc -> ALU opcode input
+                // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // destination register -> write address on register file
                 // enable read and write on register
                 // enable flags to be set
             end
             B: begin
-
+                // This should never reach this module
             end
             Bcond: begin
 
             end
             BR: begin
-
+                // This should never reach this module
             end
             NOP: begin
                 // Does nothing, literally!
@@ -299,3 +299,11 @@ module ID(clk, instruction);
     end
 
 endmodule
+
+/*
+ * Apparantly, ID is not supposed to have any muxes
+ * -> this would require NO data busses inside of this bad boi
+ * -> so every output would have to be a selection bit/bus to a mux on the outside???
+ * Genuinely so frustrating
+ * ANYWAY, this may have to be semi/completely redesigned so.. that's cool.
+ */
