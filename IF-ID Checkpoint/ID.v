@@ -2,15 +2,21 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction);
+module ID(clk, instruction);
 
+    input           clk;
     input [31:0]    instruction;    // Instruction passed in from Instruction Memory    
 
+    output reg [2:0]    read_addr1;
+    input [31:0]        value1;
+    output reg [2:0]    write_addr;
+    output reg [31:0]   write_data;
+    output reg          write_enable;
 
     wire [1:0]        fld;           // first-level-decode, bits 31-30
     wire              s;             // special single bit for data instructions, bits 29
     wire [3:0]        sld;           // single-level-decode, bits 28-25
-    output reg [2:0] alu_oc;        // opcode for ALU, bits 27-25
+    output wire [2:0] alu_oc;        // opcode for ALU, bits 27-25
 
     wire [2:0]        dest_reg;      // destination register, bits 24-22
     wire [2:0]        mem_ptr_reg;   // pointer register for memory instructions, bits 21-19
@@ -37,26 +43,27 @@ module ID(instruction);
     parameter ORS2  = 'b0111100, XOR2  = 'b0110101, XORS2 = 'b0111101, NOT   = 'b0110110, B     = 'b1100000;
     parameter Bcond = 'b1100001, BR    = 'b1100010, NOP   = 'b1100100, HALT  = 'b1101000;
 
-    initial
-    begin
         /*
          * The following statements will save each 
          * of the bit strings for possible parameters
          */
-        assign fld =           instruction[31:30];
-        assign s =             instruction[29];
-        assign sld =           instruction[28:25];
-        assign alu_oc =        instruction[27:25];
-        assign dest_reg =      instruction[24:22];
-        assign mem_ptr_reg =   instruction[21:19];
-        assign br_ptr_reg =    instruction[24:21];
-        assign offset =        instruction[15:0];
-        assign src_reg =       instruction[24:22];
-        assign imm =           instruction[15:0];
-        assign op_1_reg =      instruction[21:19];
-        assign op_2_reg =      instruction[18:16];
-        assign shift_amt_reg = instruction[21:19];
-        assign cond_flags =    instruction[24:21];
+    assign fld =           instruction[31:30];
+    assign s =             instruction[29];
+    assign sld =           instruction[28:25];
+    assign alu_oc =        instruction[27:25];
+    assign dest_reg =      instruction[24:22];
+    assign mem_ptr_reg =   instruction[21:19];
+    assign br_ptr_reg =    instruction[24:21];
+    assign offset =        instruction[15:0];
+    assign src_reg =       instruction[24:22];
+    assign imm =           instruction[15:0];
+    assign op_1_reg =      instruction[21:19];
+    assign op_2_reg =      instruction[18:16];
+    assign shift_amt_reg = instruction[21:19];
+    assign cond_flags =    instruction[24:21];
+
+    always @(posedge clk)
+    begin
 
         /*
          * Case statement to check the most significant 7-bits 
@@ -86,16 +93,18 @@ module ID(instruction);
                 // enable write to dataMem
             end
             MOV: begin
-                // destination register -> write address on register file
-                // immediate -> write_data on register file
-                // enable write on register file
-                // TODO: figure out how to write to lower bytes
+                read_addr1 = dest_reg;                  // destination register -> read address on register file
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data[31:16] = value1[31:16];      // copy value from most significant 2 bytes to remain constant
+                write_data[15:0] = imm[15:0];     // immediate -> write_data on register file, stores into the least significant 2 bytes
+                write_enable = 1;                       // enable write on register file
             end
             MOVT: begin
-                // destination register -> write address on register file
-                // immediate -> write_data on register file
-                // enable write on register file
-                // TODO: figure out how to explicitly write to upper bytes and not lower
+                read_addr1 = dest_reg;                  // destination register -> read address on register file
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data[15:0] = value1[15:0];        // copy value from least significant 2 bytes to remain constant
+                write_data[31:0] = imm[15:0];     // immediate -> write_data on register file, stores into the most significant 2 bytes
+                write_enable = 1;                       // enable write on register file
             end
             ADD: begin
                 // alu_oc -> ALU opcode input
