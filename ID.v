@@ -188,14 +188,14 @@ module ID(clk, instruction);
 
             end
             CLR: begin
-                // destination register -> write address on register file
-                // pass all 0's into write_data on register file
-                // enable write on register file
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data = {32{1'b0}};                // pass all 0's into write_data on register file
+                write_enable = 1;                       // enable write on register file
             end
             SET: begin
-                // destination register -> write address on register file
-                // pass all 1's into write_data on register file
-                // enable write on register file
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data = {32{1'b1}};                // pass all 1's into write_data on register file
+                write_enable = 1;                       // enable write on register file
             end
             ADD2: begin
                 // alu_oc -> ALU opcode input
