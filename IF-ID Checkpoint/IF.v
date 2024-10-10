@@ -74,7 +74,7 @@ module IF(clk, b_cond, b_relAddr, write_enable, write_addr, write_value, br_valu
     // will get updated through a signal sent to the IF by  //
     // the ID, and will then update the value based on the  //
     // value in the instruction. All other instruction will //
-    // implement the pc as normal (4 bytes per instruction) //
+    // implement the pc as normal, 4 bytes per instruction. //
     // - - - - - - - - - - - - - - - - - - - - - - - - - -  //
         end else                                                // Not B or BR // 
         begin
