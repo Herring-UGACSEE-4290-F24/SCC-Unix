@@ -217,3 +217,8 @@ module ID_tb();
     end
 
 endmodule
+
+/*
+ * Remind Herring about how Branch Predict is defined as NOP in the document, shouldn't be that way.
+ * BR instruction can just 0 out the lowest 2 bits to be 4 byte alligned.
+ */
