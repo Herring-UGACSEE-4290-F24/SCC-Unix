@@ -39,10 +39,12 @@ module Reg_File(read_addr1, read_addr2, br_addr, write_addr, write_value_alu, wr
 
 endmodule
 
-/*
- * Reg 7 in the user accessible will be the Zero Register
- * 
+/* 
  * Separate registers for reserved (8 new regs) NOT USER ACCESSIBLE
  * Reg 7 should be CPSR -> (Formatted as ARMv8 is)
  * Reg 6 will be pc
+ * LR
+ * SP
+ *
+ * R0 is Zero Reg
  */
