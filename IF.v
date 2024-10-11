@@ -18,7 +18,7 @@ module IF(clk, b_cond, b_relAddr, write_enable, write_addr, write_value, br_valu
     output reg [31:0]   instruction_out; // Passing onto Instruction Decode
 
     output reg [2:0]    br_addr;         // Address of register containing the value to branch to
-    output reg [31:0]   pc;              // Program Counter: points to an address in instruction memory
+    output reg [31:0]   pc = 'h00000000; // Program Counter: points to an address in instruction memory
 
     reg [31:0]          offset;          // Amount to adjust the pc
     reg [31:0]          prefetch;        // Prefetching registers
