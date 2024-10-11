@@ -1,11 +1,17 @@
-module EXE(value1, value2, immediate, ir_op, result);
+module EXE(value1, value2, immediate, alu_oc, ir_op, result);
 
     input [31:0]        value1, value2, immediate; 
+    input [2:0]         alu_oc;
     input               ir_op;
     output reg [31:0]   result;
 
     reg [31:0]          op2;
-    ALU alu1();
+    ALU alu1(
+        .operand1 (value1),
+        .operand2 (op2),
+        .opcode (alu_oc),
+        .result (result)
+    );
 
     always @(posedge clk)
     begin
