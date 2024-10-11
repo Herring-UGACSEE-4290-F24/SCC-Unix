@@ -2,9 +2,8 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(clk, instruction, read_addr1, read_addr2, value1, value2, write_addr, write_data, write_data_sel, write_enable, operand2, ir_op);
+module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write_data, write_data_sel, write_enable, operand2, ir_op);
 
-    input           clk;
     input [31:0]    instruction;    // Instruction passed in from Instruction Memory    
 
 //   FOR CONTROLLING REG_FILE SIGNALS  //
@@ -91,7 +90,7 @@ module ID(clk, instruction, read_addr1, read_addr2, value1, value2, write_addr, 
     assign shift_amt_reg = instruction[21:19];
     assign cond_flags =    instruction[24:21];
 
-    always @(posedge clk)
+    always @(*)
     begin
 
         // Set every important control line to 0 (?)

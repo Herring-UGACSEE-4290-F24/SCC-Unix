@@ -1,5 +1,8 @@
 `timescale 1ns/1ns
 
+/*
+ * This is the testbench module for Instruction Fetch of the SCC Unix Group
+*/
 module IF_tb();
     /*
      * defining inputs
@@ -12,10 +15,10 @@ module IF_tb();
      * defining outputs
     */
     wire [31:0] instruction_out_s;      // instruction out (32 bits)
-    wire [2:0]  br_addr_s;             // address of register to branch to
+    wire [2:0]  br_addr_s;              // address of register to branch to
     wire [31:0] pc_s;                   // program counter (32 bits)
  
-    IF dut (                    // instantiating module
+    IF dut (                            // instantiating module
         .clk (clk_s),   
         .br_value (br_value_s),                
         .instruction_in (instruction_in_s),         
@@ -44,7 +47,7 @@ module IF_tb();
      *      6 : BR [br_value == 9]        -->  instruction_out = 0x8000_0001, PC = 9
      *      7 : 0x1100_1100               -->  instruction_out = NOP, PC = 13
      *
-     *      Reference for Encoding: 
+     *      Reference for Encoding : 
      *      ---------------------------- 
      *       B   : [ 1 1 0 0 0 0 0  0xC0000005 ]
      *       BR  : [ 1 1 0 0 0 1 0  0xC4000000 ]

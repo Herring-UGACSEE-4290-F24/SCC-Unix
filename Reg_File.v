@@ -19,6 +19,10 @@ module Reg_File(read_addr1, read_addr2, br_addr, write_addr, write_value_alu, wr
     assign value2 = registers[read_addr2];  // Read value in register pointed at by read_addr2
     assign br_value = registers[br_addr];   // Read value in register pointed at by br_addr
 
+    initial begin
+        $dumpvars(0, registers[0], registers[1], registers[2], registers[3], registers[4], registers[5], registers[6], registers[7]);
+    end
+
     always @(posedge clk) begin
 
         if (write_enable) begin                    // When the write_enable is HIGH

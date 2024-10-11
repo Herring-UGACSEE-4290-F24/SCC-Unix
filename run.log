@@ -1,2 +1,10 @@
 LXT2 info: dumpfile dump.lx2 opened for output.
-IF_tb.v:84: $finish called at 210 (1ns)
+LXT2 warning: dumping array word ID_tb.dut_2.registers[0] will conflict with an escaped identifier.
+LXT2 warning: dumping array word ID_tb.dut_2.registers[1] will conflict with an escaped identifier.
+LXT2 warning: dumping array word ID_tb.dut_2.registers[2] will conflict with an escaped identifier.
+LXT2 warning: dumping array word ID_tb.dut_2.registers[3] will conflict with an escaped identifier.
+LXT2 warning: dumping array word ID_tb.dut_2.registers[4] will conflict with an escaped identifier.
+LXT2 warning: dumping array word ID_tb.dut_2.registers[5] will conflict with an escaped identifier.
+LXT2 warning: dumping array word ID_tb.dut_2.registers[6] will conflict with an escaped identifier.
+LXT2 warning: dumping array word ID_tb.dut_2.registers[7] will conflict with an escaped identifier.
+ID_tb.v:95: $finish called at 150 (1ns)
