@@ -2,7 +2,7 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write_data, write_data_sel, write_enable, operand2, ir_op);
+module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write_data, write_data_sel, write_enable, alu_oc, operand2, ir_op);
 
     input [31:0]    instruction;    // Instruction passed in from Instruction Memory    
 
@@ -30,6 +30,7 @@ module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write
 // will change muxes that provide the val //
 // that the ALU uses.                     //
 // - - - - - - - - - - - - - - - - - - -  //
+    output reg [2:0]  opcode;             // Opcode for the ALU
     output reg [31:0] operand2;           // The second operand field of the ALU
     output reg        ir_op;              // Instruction/Register operand (control bit)
 // ====================================== //
@@ -43,7 +44,7 @@ module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write
     wire [1:0]        fld;           // first-level-decode, bits 31-30
     wire              s;             // special single bit for data instructions, bits 29
     wire [3:0]        sld;           // single-level-decode, bits 28-25
-    output wire [2:0] alu_oc;        // opcode for ALU, bits 27-25
+    wire [2:0]        alu_oc;        // opcode for ALU, bits 27-25
 
     wire [2:0]        dest_reg;      // destination register, bits 24-22
     wire [2:0]        mem_ptr_reg;   // pointer register for memory instructions, bits 21-19
