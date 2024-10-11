@@ -61,7 +61,7 @@ module ID_tb();
         .alu_oc (alu_oc_s),
         .ir_op (ir_op_s),
         .result (write_data_s)
-    )
+    );
 
     always begin                        // setting up clock
         clk_s = 0;
