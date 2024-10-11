@@ -95,7 +95,7 @@ module ID_tb();
      *        : CLR R6              -> 0x0580_0000
      *        : CLR R7              -> 0x05C0_0000
      *        :
-     *      6 : MOV R1, #0x0001     -> 0x0000_0001
+     *      6 : MOV R1, #0x1        -> 0x0040_0001
      *        : ADD R0, R0, #0x1    -> 0x2200_0001
      *        : ADD R0, R0, R1      -> 0x6201_0000
      *        :
@@ -164,7 +164,7 @@ module ID_tb();
         #5 instruction_s = 'h05C0_0000;
         // ================================ // 6
         @(posedge clk_s);
-        #5 instruction_s = 'h0000_0001;
+        #5 instruction_s = 'h0040_0001;
 
         @(posedge clk_s);
         #5 instruction_s = 'h2200_0001;
