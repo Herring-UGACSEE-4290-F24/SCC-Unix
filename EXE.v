@@ -19,10 +19,5 @@ module EXE();
         end
 
     end
-    /*
-     * ALU SHOULD NOT BE CLOCKED (?)
-     * -> Want result immediately so it can be written to regs in same clock cycle
-     * -> need wires and also non-clocking in the module itself
-     */ 
 
 endmodule

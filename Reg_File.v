@@ -1,9 +1,11 @@
-module Reg_File(read_addr1, read_addr2, br_addr, write_addr, write_value, write_enable, clk, value1, value2, br_value);
+module Reg_File(read_addr1, read_addr2, br_addr, write_addr, write_value_alu, write_value_id, write_data_sel, write_enable, clk, value1, value2, br_value);
 
     input [2:0] read_addr1, read_addr2;     // Two ports for reading from registers
     input [2:0] br_addr;                    // Register accessed by a BR instruction
     input [2:0] write_addr;                 // One port to write to a register
-    input [31:0] write_value;               // Value to be written to register pointed at by write_addr
+    input [31:0] write_value_alu;           // Value from the ALU to be written to register pointed at by write_addr
+    input [31:0] write_value_id;            // Value from the ID to be written to register pointed at by write_addr
+    input write_data_sel;                   // Determines which value is being used to write to regs
     input write_enable;                     // Enable the writing of write_value to write_addr
 
     input clk;                              // Static design requires a clock
@@ -20,7 +22,13 @@ module Reg_File(read_addr1, read_addr2, br_addr, write_addr, write_value, write_
     always @(posedge clk) begin
 
         if (write_enable) begin                    // When the write_enable is HIGH
-            registers[write_addr] <= write_value;  // Store write_value in register at address write_addr
+
+            if (write_data_sel) begin
+                registers[write_addr] <= write_value_alu;  // Store write_value_alu in register at address write_addr
+            end else begin
+                registers[write_addr] <= write_value_id;   // Store write_value_id in register at address write_addr
+            end
+            
         end
 
     end

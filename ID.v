@@ -15,7 +15,7 @@ module ID(clk, instruction);
 // being decoded.                    //
 // - - - - - - - - - - - - - - - - - //
     output reg [2:0]    read_addr1;  // First address to read from
-    output reg [2:0]    read_addr2   // Second address to read from
+    output reg [2:0]    read_addr2;  // Second address to read from
     input [31:0]        value1;      // Value at first address' reg
     input [31:0]        value2;      // Value at second address' reg
     output reg [2:0]    write_addr;  // Address to write to
@@ -32,6 +32,7 @@ module ID(clk, instruction);
 // - - - - - - - - - - - - - - - - - - -  //
     output reg [31:0] operand2;           // The second operand field of the ALU
     output reg        ir_op;              // Instruction/Register operand (control bit)
+    output reg        write_data_sel;     // Determines if value being written to regs is from alu result or elsewhere
 // ====================================== //
 
 // BITFIELD AGRUMENT SPLITTING //
@@ -93,6 +94,11 @@ module ID(clk, instruction);
     always @(posedge clk)
     begin
 
+        // Set every important control line to 0 (?)
+        // -> then an instruction can set it's controls how it needs
+        // -> avoids write_enable being left high (very bad)
+        write_enable = 0;
+
         /*
          * Case statement to check the most significant 7-bits 
          * Sets control signals according to the given instruction
@@ -125,6 +131,7 @@ module ID(clk, instruction);
                 write_addr = dest_reg;                  // destination register -> write address on register file
                 write_data[31:16] = value1[31:16];      // copy value from most significant 2 bytes to remain constant
                 write_data[15:0] = imm[15:0];           // immediate -> write_data on register file, stores into the least significant 2 bytes
+                write_data_sel = 0;                     // write a value originating from the ID
                 write_enable = 1;                       // enable write on register file
             end
             MOVT: begin
@@ -132,6 +139,7 @@ module ID(clk, instruction);
                 write_addr = dest_reg;                  // destination register -> write address on register file
                 write_data[15:0] = value1[15:0];        // copy value from least significant 2 bytes to remain constant
                 write_data[31:16] = imm[15:0];          // immediate -> write_data on register file, stores into the most significant 2 bytes
+                write_data_sel = 0;                     // write a value originating from the ID
                 write_enable = 1;                       // enable write on register file
             end
             ADD: begin
@@ -140,6 +148,7 @@ module ID(clk, instruction);
                 operand2 = imm;                         // immediate -> the ALU to be computed
                 ir_op = 0;                              // to mux: makes ALU take imm operand
                 write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data_sel = 1;                     // write a value originating from the ALU
                 write_enable = 1;                       // enable write on register
             end
             ADDS: begin
@@ -156,6 +165,7 @@ module ID(clk, instruction);
                 operand2 = imm;                         // immediate -> the ALU to be computed
                 ir_op = 0;                              // to mux: makes ALU take imm operand
                 write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data_sel = 1;                     // write a value originating from the ALU
                 write_enable = 1;                       // enable write on register
             end
             SUBS: begin
@@ -172,6 +182,7 @@ module ID(clk, instruction);
                 operand2 = imm;                         // immediate -> the ALU to be computed
                 ir_op = 0;                              // to mux: makes ALU take imm operand
                 write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data_sel = 1;                     // write a value originating from the ALU
                 write_enable = 1;                       // enable write on register
             end
             ANDS: begin
@@ -188,6 +199,7 @@ module ID(clk, instruction);
                 operand2 = imm;                         // immediate -> the ALU to be computed
                 ir_op = 0;                              // to mux: makes ALU take imm operand
                 write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data_sel = 1;                     // write a value originating from the ALU
                 write_enable = 1;                       // enable write on register
             end
             ORS: begin
@@ -204,6 +216,7 @@ module ID(clk, instruction);
                 operand2 = imm;                         // immediate -> the ALU to be computed
                 ir_op = 0;                              // to mux: makes ALU take imm operand
                 write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data_sel = 1;                     // write a value originating from the ALU
                 write_enable = 1;                       // enable write on register
             end
             XORS: begin
@@ -223,11 +236,13 @@ module ID(clk, instruction);
             CLR: begin
                 write_addr = dest_reg;                  // destination register -> write address on register file
                 write_data = {32{1'b0}};                // pass all 0's into write_data on register file
+                write_data_sel = 0;                     // write a value originating from the ID
                 write_enable = 1;                       // enable write on register file
             end
             SET: begin
                 write_addr = dest_reg;                  // destination register -> write address on register file
                 write_data = {32{1'b1}};                // pass all 1's into write_data on register file
+                write_data_sel = 0;                     // write a value originating from the ID
                 write_enable = 1;                       // enable write on register file
             end
             ADD2: begin
@@ -236,6 +251,7 @@ module ID(clk, instruction);
                 read_addr2 = op_2_reg;                  // op 2 register -> other read address on register file
                 ir_op = 1;                              // to mux: makes ALU take imm operand
                 write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data_sel = 1;                     // write a value originating from the ALU
                 write_enable = 1;                       // enable write on register
             end
             ADDS2: begin
@@ -252,6 +268,7 @@ module ID(clk, instruction);
                 read_addr2 = op_2_reg;                  // op 2 register -> other read address on register file
                 ir_op = 1;                              // to mux: makes ALU take imm operand
                 write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data_sel = 1;                     // write a value originating from the ALU
                 write_enable = 1;                       // enable write on register
             end
             SUBS2: begin
@@ -268,6 +285,7 @@ module ID(clk, instruction);
                 read_addr2 = op_2_reg;                  // op 2 register -> other read address on register file
                 ir_op = 1;                              // to mux: makes ALU take imm operand
                 write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data_sel = 1;                     // write a value originating from the ALU
                 write_enable = 1;                       // enable write on register
             end
             ANDS2: begin
@@ -284,6 +302,7 @@ module ID(clk, instruction);
                 read_addr2 = op_2_reg;                  // op 2 register -> other read address on register file
                 ir_op = 1;                              // to mux: makes ALU take imm operand
                 write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data_sel = 1;                     // write a value originating from the ALU
                 write_enable = 1;                       // enable write on register
             end
             ORS2: begin
@@ -300,6 +319,7 @@ module ID(clk, instruction);
                 read_addr2 = op_2_reg;                  // op 2 register -> other read address on register file
                 ir_op = 1;                              // to mux: makes ALU take imm operand
                 write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data_sel = 1;                     // write a value originating from the ALU
                 write_enable = 1;                       // enable write on register
             end
             XORS2: begin
@@ -314,6 +334,7 @@ module ID(clk, instruction);
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
                 write_addr = dest_reg;                  // destination register -> write address on register file
+                write_data_sel = 1;                     // write a value originating from the ALU
                 write_enable = 1;                       // enable write on register
             end
             B: begin
