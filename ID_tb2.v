@@ -103,7 +103,7 @@ module ID_tb();
      *        : SUB R0, R0, R0      -> 0x6400_0000
      *        :
      *      8 : MOV R0, #0xF        -> 0x0000_000F
-     *        : AND R0, R0, #0x6    -> 0x004C_0006
+     *        : AND R1, R0, #0x6    -> 0x004C_0006
      *        : MOV R1, #0x2        -> 0x0040_0002
      *        : AND R0, R0, R1      -> 0x6601_0000
      *        :
@@ -211,8 +211,6 @@ module ID_tb();
 
         @(posedge clk_s);
         @(posedge clk_s);
-        @(posedge clk_s);
-        
 
         $finish;
 
