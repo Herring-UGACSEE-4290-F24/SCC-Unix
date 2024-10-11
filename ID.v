@@ -2,26 +2,27 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(clk, instruction);
+module ID(clk, instruction, read_addr1, read_addr2, value1, value2, write_addr, write_data, write_data_sel, write_enable, operand2, ir_op);
 
     input           clk;
     input [31:0]    instruction;    // Instruction passed in from Instruction Memory    
 
-// FOR CONTROLLING REG_FILE SIGNALS  //
-// ================================= //
-// These signals will control what   //
-// data gets read and written to     //
-// the reg_file for the instruction  //
-// being decoded.                    //
-// - - - - - - - - - - - - - - - - - //
-    output reg [2:0]    read_addr1;  // First address to read from
-    output reg [2:0]    read_addr2;  // Second address to read from
-    input [31:0]        value1;      // Value at first address' reg
-    input [31:0]        value2;      // Value at second address' reg
-    output reg [2:0]    write_addr;  // Address to write to
-    output reg [31:0]   write_data;  // Data to write at address
-    output reg          write_enable;// Enable writing data to address
-// ================================= //
+//   FOR CONTROLLING REG_FILE SIGNALS  //
+// =================================== //
+// These signals will control what     //
+// data gets read and written to       //
+// the reg_file for the instruction    //
+// being decoded.                      //
+// - - - - - - - - - - - - - - - - - - //
+    output reg [2:0]    read_addr1;    // First address to read from
+    output reg [2:0]    read_addr2;    // Second address to read from
+    input [31:0]        value1;        // Value at first address' reg
+    input [31:0]        value2;        // Value at second address' reg
+    output reg [2:0]    write_addr;    // Address to write to
+    output reg [31:0]   write_data;    // Data to write at address
+    output reg          write_data_sel;// Determines if value being written to regs is from alu result or elsewhere
+    output reg          write_enable;  // Enable writing data to address
+// =================================== //
 
 // FOR SENDING CONTROLS AND VALUES TO ALU //
 // ====================================== //
@@ -32,7 +33,6 @@ module ID(clk, instruction);
 // - - - - - - - - - - - - - - - - - - -  //
     output reg [31:0] operand2;           // The second operand field of the ALU
     output reg        ir_op;              // Instruction/Register operand (control bit)
-    output reg        write_data_sel;     // Determines if value being written to regs is from alu result or elsewhere
 // ====================================== //
 
 // BITFIELD AGRUMENT SPLITTING //
