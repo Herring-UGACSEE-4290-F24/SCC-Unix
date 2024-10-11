@@ -210,6 +210,9 @@ module ID_tb();
         // ================================ //
 
         @(posedge clk_s);
+        @(posedge clk_s);
+        @(posedge clk_s);
+        
 
         $finish;
 
