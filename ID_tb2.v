@@ -182,13 +182,13 @@ module ID_tb();
         #5 instruction_s = 'h0000_000F;
 
         @(posedge clk_s);
-        #5 instruction_s = 'h04C0_0006;
+        #5 instruction_s = 'h004C_0006;
 
         @(posedge clk_s);
         #5 instruction_s = 'h0040_0002;
 
         @(posedge clk_s);
-        #5 instruction_s = 'h7601_0000;
+        #5 instruction_s = 'h6601_0000;
         // ================================ // 9
         @(posedge clk_s);
         #5 instruction_s = 'h2800_000F;
