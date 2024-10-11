@@ -19,7 +19,8 @@ module ID_tb();
     wire [31:0] value1_s;
     wire [31:0] value2_s;
     wire [2:0] write_addr_s;
-    wire [31:0] write_data_s;
+    wire [31:0] write_data_alu_s;
+    wire [31:0] write_data_id_s;
     wire write_data_sel_s;
     wire write_enable_s;
 
@@ -35,7 +36,7 @@ module ID_tb();
         .value1 (value1_s),
         .value2 (value2_s),
         .write_addr (write_addr_s),
-        .write_data (write_data_s),
+        .write_data (write_data_id_s),
         .write_data_sel (write_data_sel_s),
         .write_enable (write_enable_s),
         .operand2 (operand2_s),
@@ -48,7 +49,8 @@ module ID_tb();
         .read_addr1 (read_addr1_s),
         .read_addr2 (read_addr2_s),
         .write_addr (write_addr_s),
-        .write_value_id (write_data_s),
+        .write_value_alu (write_data_alu_s),
+        .write_value_id (write_data_id_s),
         .write_data_sel (write_data_sel_s),
         .write_enable (write_enable_s),
         .value1 (value1_s),
@@ -61,7 +63,7 @@ module ID_tb();
         .immediate (operand2_s),
         .alu_oc (alu_oc_s),
         .ir_op (ir_op_s),
-        .result (write_data_s)
+        .result (write_data_alu_s)
     );
 
     always begin                        // setting up clock
