@@ -78,10 +78,14 @@ module ID_tb();
      * Beginning of Testbench.
      * ------------------------------------------
      * Test Cases :
-     *      1 : MOV R0,  #0xFFFF      
+     *      1 : MOV R0,  #0xFFFF 
+     *        :     
      *      2 : MOVT R0, #0xEEEE
+     *        :
      *      3 : SET R1
+     *        :
      *      4 : CLR R2
+     *        :
      *      5 : CLR R0              -> 0x0400_0000
      *        : CLR R1              -> 0x0440_0000
      *        : CLR R2              -> 0x0480_0000
@@ -90,9 +94,27 @@ module ID_tb();
      *        : CLR R5              -> 0x0540_0000
      *        : CLR R6              -> 0x0580_0000
      *        : CLR R7              -> 0x05C0_0000
+     *        :
      *      6 : MOV R1, #0x0001     -> 0x0000_0001
-     *        : ADD R0, R0, #1      -> 0x2200_0001
+     *        : ADD R0, R0, #0x1    -> 0x2200_0001
      *        : ADD R0, R0, R1      -> 0x6201_0000
+     *        :
+     *      7 : SUB R0, R0, #0x1    -> 0x2400_0001
+     *        : SUB R0, R0, R0      -> 0x6400_0000
+     *        :
+     *      8 : MOV R0, #0xF        -> 0x0000_000F
+     *        : AND R0, R0, #0x6    -> 0x04C0_0006
+     *        : MOV R1, #0x2        -> 0x0040_0002
+     *        : AND R0, R0, R1      -> 0x7601_0000
+     *        :
+     *      9 : OR R0, R0, #0xF     -> 0x2800_000F
+     *        : OR R1, R0, #0x10    -> 0x2840_0010
+     *        : OR R1, R0, R1       -> 0x6841_0000
+     *        :
+     *     10 : XOR R0, R0, R1      -> 0x6A01_0000
+     *        : XOR R0, R0, #F      -> 0x2A00_000F
+     *        :
+     *     11 : NOT R0, R0          -> 0x6C00_0000
      *      
      *      Reference for Encoding :
      *      -------------------------------------
@@ -149,6 +171,42 @@ module ID_tb();
 
         @(posedge clk_s);
         #5 instruction_s = 'h6201_0000;
+        // ================================ // 7
+        @(posedge clk_s);
+        #5 instruction_s = 'h2400_0001;
+
+        @(posedge clk_s);
+        #5 instruction_s = 'h6400_0000;
+        // ================================ // 8
+        @(posedge clk_s);
+        #5 instruction_s = 'h0000_000F;
+
+        @(posedge clk_s);
+        #5 instruction_s = 'h04C0_0006;
+
+        @(posedge clk_s);
+        #5 instruction_s = 'h0040_0002;
+
+        @(posedge clk_s);
+        #5 instruction_s = 'h7601_0000;
+        // ================================ // 9
+        @(posedge clk_s);
+        #5 instruction_s = 'h2800_000F;
+
+        @(posedge clk_s);
+        #5 instruction_s = 'h2840_0010;
+
+        @(posedge clk_s);
+        #5 instruction_s = 'h6841_0000;
+        // ================================ // 10
+        @(posedge clk_s);
+        #5 instruction_s = 'h6A01_0000;
+
+        @(posedge clk_s);
+        #5 instruction_s = 'h2A00_000F;
+        // ================================ // 11
+        @(posedge clk_s);
+        #5 instruction_s = 'h6C00_0000;
         // ================================ //
 
         @(posedge clk_s);
