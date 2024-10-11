@@ -1,0 +1,48 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Fri Oct 11 06:39:51 2024
+[*]
+[dumpfile] "/Users/vinny/SCC-Unix/dump.lx2"
+[dumpfile_mtime] "Fri Oct 11 06:33:12 2024"
+[dumpfile_size] 528
+[savefile] "/Users/vinny/SCC-Unix/IF_Output.gtkw"
+[timestart] 0
+[size] 1728 1080
+[pos] -1 -2
+*-5.070334 123 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] IF_tb.
+[sst_width] 193
+[signals_width] 305
+[sst_expanded] 1
+[sst_vpaned_height] 335
+@200
+-Inputs
+@28
+IF_tb.clk_s[0]
+@200
+-
+@22
+IF_tb.instruction_in_s[31:0]
+@200
+-
+@22
+IF_tb.dut.prefetch[31:0]
+@200
+-
+@22
+IF_tb.instruction_out_s[31:0]
+@200
+-
+@22
+IF_tb.br_value_s[31:0]
+@200
+-
+-Outputs
+@22
+IF_tb.pc_s[31:0]
+@200
+-
+@28
+IF_tb.br_addr_s[2:0]
+[pattern_trace] 1
+[pattern_trace] 0
