@@ -7,12 +7,39 @@ module ID(clk, instruction);
     input           clk;
     input [31:0]    instruction;    // Instruction passed in from Instruction Memory    
 
-    output reg [2:0]    read_addr1;
-    input [31:0]        value1;
-    output reg [2:0]    write_addr;
-    output reg [31:0]   write_data;
-    output reg          write_enable;
+// FOR CONTROLLING REG_FILE SIGNALS  //
+// ================================= //
+// These signals will control what   //
+// data gets read and written to     //
+// the reg_file for the instruction  //
+// being decoded.                    //
+// - - - - - - - - - - - - - - - - - //
+    output reg [2:0]    read_addr1;  // First address to read from
+    output reg [2:0]    read_addr2   // Second address to read from
+    input [31:0]        value1;      // Value at first address' reg
+    input [31:0]        value2;      // Value at second address' reg
+    output reg [2:0]    write_addr;  // Address to write to
+    output reg [31:0]   write_data;  // Data to write at address
+    output reg          write_enable;// Enable writing data to address
+// ================================= //
 
+// FOR SENDING CONTROLS AND VALUES TO ALU //
+// ====================================== //
+// These are either values for the ALU to //
+// operate on, or are control lines that  //
+// will change muxes that provide the val //
+// that the ALU uses.                     //
+// - - - - - - - - - - - - - - - - - - -  //
+    output reg [31:0] operand2;           // The second operand field of the ALU
+    output reg        ir_op;              // Instruction/Register operand (control bit)
+// ====================================== //
+
+// BITFIELD AGRUMENT SPLITTING //
+// =========================== //
+// This just grabs each of the //
+// arguments in the bit fields //
+// in the instruction encoding //
+// - - - - - - - - - - - - - - //
     wire [1:0]        fld;           // first-level-decode, bits 31-30
     wire              s;             // special single bit for data instructions, bits 29
     wire [3:0]        sld;           // single-level-decode, bits 28-25
@@ -28,6 +55,7 @@ module ID(clk, instruction);
     wire [2:0]        op_2_reg;      // operand two, bits 18-16    
     wire [2:0]        shift_amt_reg; // register that stores shift amount, bits 21-19
     wire [3:0]        cond_flags;    // condition flags for branching, bits 24-21
+// =========================== //
 
     /*
      * The following are the (34) instructions defined as thier begining 7-bit encoding.
@@ -43,10 +71,10 @@ module ID(clk, instruction);
     parameter ORS2  = 'b0111100, XOR2  = 'b0110101, XORS2 = 'b0111101, NOT   = 'b0110110, B     = 'b1100000;
     parameter Bcond = 'b1100001, BR    = 'b1100010, NOP   = 'b1100100, HALT  = 'b1101000;
 
-        /*
-         * The following statements will save each 
-         * of the bit strings for possible parameters
-         */
+    /*
+     * The following statements will save each 
+     * of the bit strings for possible parameters
+     */
     assign fld =           instruction[31:30];
     assign s =             instruction[29];
     assign sld =           instruction[28:25];
@@ -70,7 +98,7 @@ module ID(clk, instruction);
          * Sets control signals according to the given instruction
          */
 
-        //PLAN: make each instruction set EVERY output, even the unused ones to x
+        // PLAN: make each instruction set EVERY output, even the unused ones to x
         // DATA MUXES ARE NOT TO BE IN THE ID
         // MAYBE change regs to wires with assign statements; REMEMBER THIS IS A SINGLE-CYCLE that means that instruction comes in and
         //   is completed within 1 clock cycle
@@ -78,7 +106,7 @@ module ID(clk, instruction);
             LOAD: begin
                 // destination register -> write address on register file
                 // pointer register -> a read address on register file
-                // enable read AND write on the register file
+                // enable write on the register file
                 // add offset to value read at pointer address
                 // send sum to dataMem input address
                 // enable read from dataMem pass into write_data on register file
@@ -108,87 +136,82 @@ module ID(clk, instruction);
             end
             ADD: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
-                // op 1 register -> a read address on register file
-                // immediate -> the ALU to be computed
-                // destination register -> write address on register file | should be controlling a mux
-                // -> because multiple things can be writing to the write_addr input on the reg_file
-                // enable read and write on register
+                read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
+                operand2 = imm;                         // immediate -> the ALU to be computed
+                ir_op = 0;                              // to mux: makes ALU take imm operand
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_enable = 1;                       // enable write on register
             end
             ADDS: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file | should be controlling a mux
-                // -> because multiple things can be writing to the write_addr input on the reg_file
-                // enable read and write on register
+                // destination register -> write address on register file
+                // enable write on register
                 // enable flags to be set
             end
             SUB: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
-                // op 1 register -> a read address on register file
-                // immediate -> the ALU to be computed
-                // destination register -> write address on register file | should be controlling a mux
-                // -> because multiple things can be writing to the write_addr input on the reg_file
-                // enable read and write on register
+                read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
+                operand2 = imm;                         // immediate -> the ALU to be computed
+                ir_op = 0;                              // to mux: makes ALU take imm operand
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_enable = 1;                       // enable write on register
             end
             SUBS: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file | should be controlling a mux
-                // -> because multiple things can be writing to the write_addr input on the reg_file
-                // enable read and write on register
+                // destination register -> write address on register file
+                // enable write on register
                 // enable flags to be set
             end
             AND: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
-                // op 1 register -> a read address on register file
-                // immediate -> the ALU to be computed
-                // destination register -> write address on register file | should be controlling a mux
-                // -> because multiple things can be writing to the write_addr input on the reg_file
-                // enable read and write on register
+                read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
+                operand2 = imm;                         // immediate -> the ALU to be computed
+                ir_op = 0;                              // to mux: makes ALU take imm operand
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_enable = 1;                       // enable write on register
             end
             ANDS: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file | should be controlling a mux
-                // -> because multiple things can be writing to the write_addr input on the reg_file
-                // enable read and write on register
+                // destination register -> write address on register file
+                // enable write on register
                 // enable flags to be set
             end
             OR: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
-                // op 1 register -> a read address on register file
-                // immediate -> the ALU to be computed
-                // destination register -> write address on register file | should be controlling a mux
-                // -> because multiple things can be writing to the write_addr input on the reg_file
-                // enable read and write on register
+                read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
+                operand2 = imm;                         // immediate -> the ALU to be computed
+                ir_op = 0;                              // to mux: makes ALU take imm operand
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_enable = 1;                       // enable write on register
             end
             ORS: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file | should be controlling a mux
-                // -> because multiple things can be writing to the write_addr input on the reg_file
-                // enable read and write on register
+                // destination register -> write address on register file
+                // enable write on register
                 // enable flags to be set
             end
             XOR: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
-                // op 1 register -> a read address on register file
-                // immediate -> the ALU to be computed
-                // destination register -> write address on register file | should be controlling a mux
-                // -> because multiple things can be writing to the write_addr input on the reg_file
-                // enable read and write on register
+                read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
+                operand2 = imm;                         // immediate -> the ALU to be computed
+                ir_op = 0;                              // to mux: makes ALU take imm operand
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_enable = 1;                       // enable write on register
             end
             XORS: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file | should be controlling a mux
-                // -> because multiple things can be writing to the write_addr input on the reg_file
-                // enable read and write on register
+                // destination register -> write address on register file
+                // enable write on register
                 // enable flags to be set
             end
             LSL: begin
@@ -209,85 +232,89 @@ module ID(clk, instruction);
             end
             ADD2: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
-                // op 1 register -> a read address on register file
-                // op 2 register -> other read address on register file
-                // destination register -> write address on register file
-                // enable read and write on register
+                read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
+                read_addr2 = op_2_reg;                  // op 2 register -> other read address on register file
+                ir_op = 1;                              // to mux: makes ALU take imm operand
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_enable = 1;                       // enable write on register
             end
             ADDS2: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
-                // enable read and write on register
+                // enable write on register
                 // enable flags to be set
             end
             SUB2: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
-                // op 1 register -> a read address on register file
-                // op 2 register -> other read address on register file
-                // destination register -> write address on register file
-                // enable read and write on register
+                read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
+                read_addr2 = op_2_reg;                  // op 2 register -> other read address on register file
+                ir_op = 1;                              // to mux: makes ALU take imm operand
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_enable = 1;                       // enable write on register
             end
             SUBS2: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
-                // enable read and write on register
+                // enable write on register
                 // enable flags to be set
             end
             AND2: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
-                // op 1 register -> a read address on register file
-                // op 2 register -> other read address on register file
-                // destination register -> write address on register file
-                // enable read and write on register
+                read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
+                read_addr2 = op_2_reg;                  // op 2 register -> other read address on register file
+                ir_op = 1;                              // to mux: makes ALU take imm operand
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_enable = 1;                       // enable write on register
             end
             ANDS2: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
-                // enable read and write on register
+                // enable write on register
                 // enable flags to be set
             end
             OR2: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
-                // op 1 register -> a read address on register file
-                // op 2 register -> other read address on register file
-                // destination register -> write address on register file
-                // enable read and write on register
+                read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
+                read_addr2 = op_2_reg;                  // op 2 register -> other read address on register file
+                ir_op = 1;                              // to mux: makes ALU take imm operand
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_enable = 1;                       // enable write on register
             end
             ORS2: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
-                // enable read and write on register
+                // enable write on register
                 // enable flags to be set
             end
             XOR2: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
-                // op 1 register -> a read address on register file
-                // op 2 register -> other read address on register file
-                // destination register -> write address on register file
-                // enable read and write on register
+                read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
+                read_addr2 = op_2_reg;                  // op 2 register -> other read address on register file
+                ir_op = 1;                              // to mux: makes ALU take imm operand
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_enable = 1;                       // enable write on register
             end
             XORS2: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // op 2 register -> other read address on register file
                 // destination register -> write address on register file
-                // enable read and write on register
+                // enable write on register
                 // enable flags to be set
             end
             NOT: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
-                // op 1 register -> a read address on register file
-                // destination register -> write address on register file
-                // enable read and write on register
-                // enable flags to be set
+                read_addr1 = op_1_reg;                  // op 1 register -> a read address on register file
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                write_enable = 1;                       // enable write on register
             end
             B: begin
                 // This should never reach this module

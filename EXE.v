@@ -1,21 +1,28 @@
 module EXE();
 
-    reg [31:0] op1, op2;
+    input [31:0]        value1, value2, immediate; 
+    input               ir_op;
+    output reg [31:0]   result;
 
+    reg [31:0]          op2;
     ALU alu1();
 
     always @(posedge clk)
     begin
 
-        op1 <= operand1;
-        if (ir_op) 
+        if (ir_op)              // Loads immediate into the ALU on 0, and the register value on 1
         begin
-            op2 <= i_operand2;
+            op2 <= value2;      // Loading value returned by Registers
         end else
         begin
-            op2 <= r_operand2;
+            op2 <= immediate;   // Loading immediate value from ID
         end
 
     end
+    /*
+     * ALU SHOULD NOT BE CLOCKED (?)
+     * -> Want result immediately so it can be written to regs in same clock cycle
+     * -> need wires and also non-clocking in the module itself
+     */ 
 
 endmodule
