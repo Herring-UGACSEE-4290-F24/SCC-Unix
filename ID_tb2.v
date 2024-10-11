@@ -23,6 +23,7 @@ module ID_tb();
     wire write_data_sel_s;
     wire write_enable_s;
 
+    wire [2:0] alu_oc_s;
     wire [31:0] operand2_s;
     wire ir_op_s;
 

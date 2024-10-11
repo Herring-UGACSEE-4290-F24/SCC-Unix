@@ -44,7 +44,7 @@ module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write
     wire [1:0]        fld;           // first-level-decode, bits 31-30
     wire              s;             // special single bit for data instructions, bits 29
     wire [3:0]        sld;           // single-level-decode, bits 28-25
-    output wire [2:0]        alu_oc;        // opcode for ALU, bits 27-25
+    output wire [2:0] alu_oc;        // opcode for ALU, bits 27-25
 
     wire [2:0]        dest_reg;      // destination register, bits 24-22
     wire [2:0]        mem_ptr_reg;   // pointer register for memory instructions, bits 21-19
