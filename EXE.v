@@ -1,4 +1,4 @@
-module EXE();
+module EXE(value1, value2, immediate, ir_op, result);
 
     input [31:0]        value1, value2, immediate; 
     input               ir_op;
