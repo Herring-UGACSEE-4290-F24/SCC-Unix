@@ -110,14 +110,16 @@ module ID(clk, instruction);
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file
+                // destination register -> write address on register file | should be controlling a mux
+                // -> because multiple things can be writing to the write_addr input on the reg_file
                 // enable read and write on register
             end
             ADDS: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file
+                // destination register -> write address on register file | should be controlling a mux
+                // -> because multiple things can be writing to the write_addr input on the reg_file
                 // enable read and write on register
                 // enable flags to be set
             end
@@ -125,14 +127,16 @@ module ID(clk, instruction);
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file
+                // destination register -> write address on register file | should be controlling a mux
+                // -> because multiple things can be writing to the write_addr input on the reg_file
                 // enable read and write on register
             end
             SUBS: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file
+                // destination register -> write address on register file | should be controlling a mux
+                // -> because multiple things can be writing to the write_addr input on the reg_file
                 // enable read and write on register
                 // enable flags to be set
             end
@@ -140,14 +144,16 @@ module ID(clk, instruction);
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file
+                // destination register -> write address on register file | should be controlling a mux
+                // -> because multiple things can be writing to the write_addr input on the reg_file
                 // enable read and write on register
             end
             ANDS: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file
+                // destination register -> write address on register file | should be controlling a mux
+                // -> because multiple things can be writing to the write_addr input on the reg_file
                 // enable read and write on register
                 // enable flags to be set
             end
@@ -155,14 +161,16 @@ module ID(clk, instruction);
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file
+                // destination register -> write address on register file | should be controlling a mux
+                // -> because multiple things can be writing to the write_addr input on the reg_file
                 // enable read and write on register
             end
             ORS: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file
+                // destination register -> write address on register file | should be controlling a mux
+                // -> because multiple things can be writing to the write_addr input on the reg_file
                 // enable read and write on register
                 // enable flags to be set
             end
@@ -170,14 +178,16 @@ module ID(clk, instruction);
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file
+                // destination register -> write address on register file | should be controlling a mux
+                // -> because multiple things can be writing to the write_addr input on the reg_file
                 // enable read and write on register
             end
             XORS: begin
                 // alu_oc -> ALU opcode input | ALREADY ASSIGNED IN WIRE STATEMENTS
                 // op 1 register -> a read address on register file
                 // immediate -> the ALU to be computed
-                // destination register -> write address on register file
+                // destination register -> write address on register file | should be controlling a mux
+                // -> because multiple things can be writing to the write_addr input on the reg_file
                 // enable read and write on register
                 // enable flags to be set
             end
@@ -306,4 +316,7 @@ endmodule
  * -> so every output would have to be a selection bit/bus to a mux on the outside???
  * Genuinely so frustrating
  * ANYWAY, this may have to be semi/completely redesigned so.. that's cool.
+ *
+ * Also need to remember that the ALU has to take either a value from the imm field or the registers
+ * -> controlled by a mux on the input | Can use muxes in the EXE.v and feed into the ALU component (?)
  */
