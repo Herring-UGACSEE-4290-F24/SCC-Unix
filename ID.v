@@ -66,7 +66,7 @@ module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write
      */
     parameter LOAD  = 'b1000000, STOR  = 'b1000001, MOV   = 'b0000000, MOVT  = 'b0000001, ADD   = 'b0010001;
     parameter ADDS  = 'b0011001, SUB   = 'b0010010, SUBS  = 'b0011010, AND   = 'b0010011, ANDS  = 'b0011011;
-    parameter OR    = 'b0010100, ORS   = 'b0011100, XOR   = 'b0010101, XORS  = 'b0011101, LSL   = 'b0000001;
+    parameter OR    = 'b0010100, ORS   = 'b0011100, XOR   = 'b0010101, XORS  = 'b0011101, LSL   = 'b0000100;
     parameter LSR   = 'b0000101, CLR   = 'b0000010, SET   = 'b0000011, ADD2  = 'b0110001, ADDS2 = 'b0111001;
     parameter SUB2  = 'b0110010, SUBS2 = 'b0111010, AND2  = 'b0110011, ANDS2 = 'b0111011, OR2   = 'b0110100;
     parameter ORS2  = 'b0111100, XOR2  = 'b0110101, XORS2 = 'b0111101, NOT   = 'b0110110, B     = 'b1100000;
