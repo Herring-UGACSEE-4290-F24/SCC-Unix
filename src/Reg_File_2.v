@@ -18,6 +18,41 @@
  */
 
 module Reg_File_2(...);
+    input [31:0] usr_data;
+    input [31:0] wr_zr_data;
+    input [31:0] wr_r1_data;
+    input [31:0] wr_r2_data;
+    input [31:0] wr_r3_data;
+    input [31:0] wr_sp_data;
+    input [31:0] wr_lr_data; 
+    input [31:0] wr_pc_data;
+    input [31:0] wr_cpsr_data;
+
+    input wr_zr;
+    input wr_r1;
+    input wr_r2; 
+    input wr_r3; 
+    input wr_sp; 
+    input wr_lr;
+    input wr_pc;
+    input wr_cpsr;
+    input wr_sp;
+    input wr_enable;
+
+    input [2:0] write_addr;
+    input [2:0] read_addr;
+
+    input clk;
+
+    output [31:0] re_zr;
+    output [31:0] re_r1;
+    output [31:0] re_r2;
+    output [31:0] re_r3;
+    output [31:0] re_sp;
+    output [31:0] re_lr;
+    output [31:0] re_pc;
+    output [31:0] re_cpsr;
+    output [31:0] re_usr;
 
 
 
