@@ -7,21 +7,21 @@ input clk, reset, MemWrite, MemRead;
 input [31:0] read_address, Write_data;
 output [31:0] MemData_out;
 integer  k;
-reg [7:0] Data_Memory[31:0];
+reg [31:0] Data_Memory[7:0];
 
-always @(posedge reset)
+always @(posedge clk)
 begin
 if (reset) begin
-                    for (k = 0;k < 32; k = k +1) begin
-                        Data_Memory[k] <= 8'h00;
+                    for (k = 0;k < 8; k = k +1) begin
+                        Data_Memory[k] <= 32'h00000000;
                     end 
             end
 
 else if(MemWrite) begin
-        Data_Memory[read_address] <= Write_data;
+        Data_Memory[read_address[2:0]] <= Write_data;
         end
 
 end
-assign MemData_out = (MemRead) ? Data_Memory[read_address] : 8'h00;
+assign MemData_out = (MemRead) ? Data_Memory[read_address[2:0]] : 32'h00000000;
     
 endmodule
