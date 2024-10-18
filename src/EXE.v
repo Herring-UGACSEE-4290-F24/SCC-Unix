@@ -25,6 +25,7 @@ module EXE(value1, value2, immediate, alu_oc, ir_op, result, wr_cpsr_val);
         begin
             op2 <= immediate;   // Loading immediate value from ID
         end
+        wr_cpsr_val = 32'b0;
         wr_cpsr_val[31] = result[31];       // N
         if (result == 0) begin
             wr_cpsr_val[30] = 1;            // Z
