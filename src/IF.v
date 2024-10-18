@@ -2,28 +2,27 @@
  * This module defines the Instruction Fetch (IF) implementation by the Linux SCC group. IF keeps track
  * of the program counter (PC) which points to a word address in Instruction Memory (IM). 
  */
-module IF(clk, b_cond, b_relAddr, write_enable, write_addr, write_value, br_value, instruction_in, instruction_out, br_addr, pc);
+module IF(clk, b_relAddr, write_enable, write_addr, write_value, br_value, instruction_in, instruction_out, br_addr, re_pc_val, wr_pc_val, wr_pc);
 
-    input               clk;             // Clock signal
-    input               b_cond;          // Branch Condition StatusS
-    input [15:0]        b_relAddr;       // Amount to branch relative to current PC
+    input               clk;                // Clock signal
+    input [15:0]        b_relAddr;          // Amount to branch relative to current PC
 
-    input               write_enable;    // Signal sent from ID when the register files are being written to
-    input [2:0]         write_addr;      // Address in register file being written to 
-    input [31:0]        write_value;     // Value being written to the register file
+    input               write_enable;       // Signal sent from ID when the register files are being written to
+    input [2:0]         write_addr;         // Address in register file being written to 
+    input [31:0]        write_value;        // Value being written to the register file
 
-    input [31:0]        br_value;        // Value retrieved from register pointed to by br_addr
+    input [31:0]        br_value;           // Value retrieved from register pointed to by br_addr
 
-    input [31:0]	    instruction_in;  // Retrieved from Instruction Memory
-    output reg [31:0]   instruction_out; // Passing onto Instruction Decode
+    input [31:0]	    instruction_in;     // Retrieved from Instruction Memory
+    output reg [31:0]   instruction_out;    // Passing onto Instruction Decode
 
-    output reg [2:0]    br_addr;         // Address of register containing the value to branch to
-    output reg [31:0]   pc = 'h00000000; // Program Counter: points to an address in instruction memory
+    output reg [2:0]    br_addr;            // Address of register containing the value to branch to
+    input [31:0]        re_pc_val;          // Reads in the pc from the special registers
+    output reg [31:0]   wr_pc_val = 32'b0;  // Program Counter: points to an address in instruction memory
+    output              wr_pc = 1;          // Enables writing to the PC register (in special regs)
 
-    reg [31:0]          offset;          // Amount to adjust the pc
-    reg [31:0]          prefetch;        // Prefetching registers
-
-    parameter NOP = 'hC8000000;          // 11001000...
+    reg [31:0]          offset;             // Amount to adjust the pc
+    reg [31:0]          prefetch;           // Prefetching registers
 
     always @(posedge clk) begin
 
@@ -35,7 +34,7 @@ module IF(clk, b_cond, b_relAddr, write_enable, write_addr, write_value, br_valu
     // - - - - - - - - - - - - - - - - - - - - - - - - - - //
         offset[31:16] = {16{instruction_in[15]}};          // Duplicates the msb (sign extension)
         offset[15:0] = instruction_in[15:0];               // Copying the immediate value
-        offset = offset * 4 ;                              // Left shifts (4 byte alligned)
+        offset = offset * 4;                               // Left shifts (4 byte alligned)
     // =================================================== //
 
     // FOR HANDLING BRANCHES THAT ARE UNCONDITIONAL //
@@ -45,26 +44,7 @@ module IF(clk, b_cond, b_relAddr, write_enable, write_addr, write_value, br_valu
     // BR will need to access the registers through //
     // using the inputs/outputs on the module.      //
     // - - - - - - - - - - - - - - - - - - - - - -  //
-        if (instruction_in[31:25] == 'b1100000)                 // B instruction //
-        begin
 
-            instruction_out = prefetch;         // Feeds the prefetched instruction to the ID
-            prefetch = NOP;                     // Stores a NOP as the prefetched instruction
-            pc <= pc + offset;                  // update the pc based on the instruction's offset
-
-        end else if (instruction_in[31:25] == 'b1100010)        // BR instruction //
-        begin
-
-            instruction_out = prefetch;         // Feeds the prefetched instruction to the ID
-            prefetch = NOP;                     // Stores a NOP as the prefetched instruction
-            br_addr = instruction_in[24:22];    // Uses bitfield to fetch address of register
-
-            // If the registers are being written to, and the register being accessed is the target //
-            if (write_enable && br_addr == write_addr) begin
-                pc <= write_value + offset;     // Update pc to the value being written +/- the offset
-            end else begin                      // Otherwise, there is no hazard is accessing a value to read
-                pc <= br_value + offset;        // Update pc to address in the register pointed to by br_addr +/- the offset
-            end
     // ============================================ //
 
     // FOR HANDLING CONDITIONAL AND NON BRANCH INSTRUCTIONS //
@@ -76,23 +56,35 @@ module IF(clk, b_cond, b_relAddr, write_enable, write_addr, write_value, br_valu
     // value in the instruction. All other instruction will //
     // implement the pc as normal, 4 bytes per instruction. //
     // - - - - - - - - - - - - - - - - - - - - - - - - - -  //
-        end else                                                // Not B or BR // 
-        begin
 
-            instruction_out = prefetch;         // Feeds the prefetched instruction to the ID
-            prefetch = instruction_in;          // Prefetches the next instruction from IM
-            if (b_cond)                         // If conditional branch is decoded AND taken (signal sent from ID)
-            begin
-                pc <= pc + (4 * b_relAddr);     // Branch according to the conditional branch statement
-                // maybe have to NOP an instruction???
-            end else
-            begin                               // Otherwise, no branches are being taken
-                pc <= pc + 4;                   // Increment the PC (4 byte alligned)
+    // ==================================================== //
+
+    always @(posedge clk) begin
+
+        instruction_out = prefetch;
+        if (instruction_in[31:25] == 'b1100000) begin
+
+            wr_pc_val = re_pc_val + offset;         // Update the pc based on the instruction's offset
+
+        end else if (instruction_in[31:25] == 'b1100010) begin
+
+            br_addr = instruction_in[24:22];        // Uses bitfield to fetch address of register
+            // If the registers are being written to, and the register being accessed is the target //
+            if (write_enable && br_addr == write_addr) begin
+                wr_pc_val = write_value + offset;   // Update pc to the value being written +/- the offset
+            end else begin                          // Otherwise, there is no hazard is accessing a value to read
+                wr_pc_val = br_value + offset;      // Update pc to address in the register pointed to by br_addr +/- the offset
             end
 
-        end 
+        end else begin
+
+            wr_pc_val = re_pc_val + 4;              // Increment the PC (4 byte alligned)
+
+        end
+        wr_pc[1:0] = 'b00;                          // Ensures 4 bytes alignment
+        prefetch = instruction_in;                  // Prefetches the next instruction from IM
 
     end
-    // ==================================================== //
+
 
 endmodule
