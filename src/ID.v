@@ -2,7 +2,7 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write_data, write_data_sel, wr_cpsr_val, wr_cpsr, opcode, operand2, ir_op, re_cpsr_val, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
+module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write_data, write_data_sel, write_enable, wr_cpsr_val, wr_cpsr, opcode, operand2, ir_op, re_cpsr_val, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
 
     input [31:0]        instruction;   // Instruction passed in from Instruction Memory    
 

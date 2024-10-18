@@ -1,0 +1,84 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Fri Oct 18 10:25:34 2024
+[*]
+[dumpfile] "/Users/vinny/SCC-Unix/src/dump.lx2"
+[dumpfile_mtime] "Fri Oct 18 10:21:15 2024"
+[dumpfile_size] 1259
+[savefile] "/Users/vinny/SCC-Unix/tests/config/cpsr.gtkw"
+[timestart] 0
+[size] 1728 1080
+[pos] -1 -2
+*-5.516552 56 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] ID_tb.
+[treeopen] ID_tb.dut_4.
+[sst_width] 193
+[signals_width] 487
+[sst_expanded] 1
+[sst_vpaned_height] 335
+@28
+ID_tb.clk_s[0]
+@22
+ID_tb.instruction_s[31:0]
+@200
+-
+-Special
+@22
+ID_tb.dut_3.\regs[0][31:0]
+ID_tb.dut_3.\regs[1][31:0]
+ID_tb.dut_3.\regs[2][31:0]
+ID_tb.dut_3.\regs[3][31:0]
+ID_tb.dut_3.\regs[4][31:0]
+ID_tb.dut_3.\regs[5][31:0]
+ID_tb.dut_3.\regs[6][31:0]
+@c00029
+ID_tb.dut_3.\regs[7][31:0]
+@28
+(0)ID_tb.dut_3.\regs[7][31:0]
+(1)ID_tb.dut_3.\regs[7][31:0]
+(2)ID_tb.dut_3.\regs[7][31:0]
+(3)ID_tb.dut_3.\regs[7][31:0]
+(4)ID_tb.dut_3.\regs[7][31:0]
+(5)ID_tb.dut_3.\regs[7][31:0]
+(6)ID_tb.dut_3.\regs[7][31:0]
+(7)ID_tb.dut_3.\regs[7][31:0]
+(8)ID_tb.dut_3.\regs[7][31:0]
+(9)ID_tb.dut_3.\regs[7][31:0]
+(10)ID_tb.dut_3.\regs[7][31:0]
+(11)ID_tb.dut_3.\regs[7][31:0]
+(12)ID_tb.dut_3.\regs[7][31:0]
+(13)ID_tb.dut_3.\regs[7][31:0]
+(14)ID_tb.dut_3.\regs[7][31:0]
+(15)ID_tb.dut_3.\regs[7][31:0]
+(16)ID_tb.dut_3.\regs[7][31:0]
+(17)ID_tb.dut_3.\regs[7][31:0]
+(18)ID_tb.dut_3.\regs[7][31:0]
+(19)ID_tb.dut_3.\regs[7][31:0]
+(20)ID_tb.dut_3.\regs[7][31:0]
+(21)ID_tb.dut_3.\regs[7][31:0]
+(22)ID_tb.dut_3.\regs[7][31:0]
+(23)ID_tb.dut_3.\regs[7][31:0]
+(24)ID_tb.dut_3.\regs[7][31:0]
+(25)ID_tb.dut_3.\regs[7][31:0]
+(26)ID_tb.dut_3.\regs[7][31:0]
+(27)ID_tb.dut_3.\regs[7][31:0]
+(28)ID_tb.dut_3.\regs[7][31:0]
+(29)ID_tb.dut_3.\regs[7][31:0]
+(30)ID_tb.dut_3.\regs[7][31:0]
+(31)ID_tb.dut_3.\regs[7][31:0]
+@1401209
+-group_end
+@200
+-
+-Normal
+@22
+ID_tb.dut_2.\registers[0][31:0]
+ID_tb.dut_2.\registers[1][31:0]
+ID_tb.dut_2.\registers[2][31:0]
+ID_tb.dut_2.\registers[3][31:0]
+ID_tb.dut_2.\registers[4][31:0]
+ID_tb.dut_2.\registers[5][31:0]
+ID_tb.dut_2.\registers[6][31:0]
+ID_tb.dut_2.\registers[7][31:0]
+[pattern_trace] 1
+[pattern_trace] 0
