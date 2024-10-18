@@ -141,7 +141,7 @@ module ID_tb();
         #5 instruction_s = 'b00000000000000000000000000000001;
         
         @(posedge clk_s);
-        #5 instruction_s = 'b00000010000000000000000000000001;
+        #5 instruction_s = 'b00001000000000000000000000000001;
         
         @(posedge clk_s);
         #5 instruction_s = 'b00001010000000000000000000000001;
