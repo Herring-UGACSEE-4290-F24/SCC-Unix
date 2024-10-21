@@ -1,7 +1,7 @@
 module DM_tb();
 
 reg clk_s, reset_s, MemWrite_s, MemRead_s;
-reg [31:0] read_address_s, Write_data_s;
+reg [31:0] write_address_s, read_address_s, Write_data_s;
 
 wire [31:0] MemData_out_s;
 
@@ -10,6 +10,7 @@ Data_Memory CompToTest (
     reset_s, 
     MemWrite_s, 
     MemRead_s, 
+    write_address_s,
     read_address_s, 
     Write_data_s, 
     MemData_out_s
@@ -37,6 +38,7 @@ initial begin
     // Write operation
     MemRead_s <= 0;
     MemWrite_s <= 1;
+    write_address <= 3;
     read_address_s <= 3;         // Address 3
     Write_data_s <= 32'hFFFFFFFF; // Write all 1's to address 3
     @(posedge clk_s);

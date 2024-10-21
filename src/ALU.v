@@ -67,3 +67,5 @@ always @(*) begin
 end
 
 endmodule
+
+// Vflag: operand1[30] + operand2[30], does this carry?

@@ -1,10 +1,10 @@
 // Data Memory
 module Data_Memory (
-    clk, reset, MemWrite, MemRead, read_address, Write_data, MemData_out
+    clk, reset, MemWrite, MemRead, write_address, read_address, Write_data, MemData_out
 );
 
 input clk, reset, MemWrite, MemRead;
-input [31:0] read_address, Write_data;
+input [31:0] write_address, read_address, Write_data;
 output [31:0] MemData_out;
 integer  k;
 reg [31:0] Data_Memory[7:0];
@@ -18,7 +18,7 @@ if (reset) begin
             end
 
 else if(MemWrite) begin
-        Data_Memory[read_address[2:0]] <= Write_data;
+        Data_Memory[write_address[2:0]] <= Write_data;
         end
 
 end
