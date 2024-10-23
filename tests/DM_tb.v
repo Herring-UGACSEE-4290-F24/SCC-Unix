@@ -38,8 +38,8 @@ initial begin
     // Write operation
     MemRead_s <= 0;
     MemWrite_s <= 1;
-    write_address <= 3;
-    read_address_s <= 3;         // Address 3
+    write_address_s <= 3;
+    read_address_s <= 32'hFFFFFFFF;         // Address 65535
     Write_data_s <= 32'hFFFFFFFF; // Write all 1's to address 3
     @(posedge clk_s);
 

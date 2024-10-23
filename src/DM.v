@@ -7,12 +7,12 @@ input clk, reset, MemWrite, MemRead;
 input [31:0] write_address, read_address, Write_data;
 output [31:0] MemData_out;
 integer  k;
-reg [31:0] Data_Memory[7:0];
+reg [31:0] Data_Memory[65535:0];
 
 always @(posedge clk)
 begin
 if (reset) begin
-                    for (k = 0;k < 8; k = k +1) begin
+                    for (k = 0;k < 65536; k = k +1) begin
                         Data_Memory[k] <= 32'h00000000;
                     end 
             end
