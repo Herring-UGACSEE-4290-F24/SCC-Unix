@@ -1,12 +1,18 @@
+#Directory for source files
+SRC_DIR = src 
+
+#Directory for test bench
+TB_DIR = tests
+
 #Simulator
 SIMULATOR = iverilog
 
 #Source file written in verilog for SCC. Primary code files that are used to build SCC project.
 #Source Files (examples include  = scc.v alu.v reg_file.v (match to our groups file names)). Add any missing files on wednesday.
-SOURCE = ALU.v Reg_File.v Reg_File_2.v EXE.v DM.v ID.v IF.v Instruction_Mem.v
+SOURCE = $(SRC_DIR)/ALU.v $(SRC_DIR)/DM.v $(SRC_DIR)/EXE.v $(SRC_DIR)/ID.v $(SRC_DIR)/IF.v $(SRC_DIR)/Instruction_Mem.v $(SRC_DIR)/Reg_File.v $(SRC_DIR)/Reg_File_2.v $(SRC_DIR)/SCC.v
 
 #Testbench serves as the as a simulated environment where you can apply inputs to the design under test and observe its outputs
-TESTBENCH = Tb.v
+TESTBENCH = $(TB_DIR)/Tb.v
 
 #Output
 EXECUTABLE = SCC_Tb #We can decide what to name this as a group on wednesday
@@ -22,7 +28,13 @@ $(EXECUTABLE): $(SOURCE) $(TESTBENCH)
 run: $(EXECUTABLE)
 	vvp $(EXECUTABLE)
 
+#view waveform (requires GTKwave)
+#Replace with 'gtkwave output.lxt2' for other group members
+view: run
+	gtkwave output.vcd
+
 #Remove generated files. Clean will remove the specified executable and any .vcd files, contributing to the cleanliness and manageability of your project.
+#Replace with 'rm -f $(EXECUTABLE) *.vcd *.lxt *.lxt2' for other group memebers
 clean:
 	rm -f $(EXECUTABLE) *.vcd
 
