@@ -1,8 +1,8 @@
-- Add reset control
+- Add reset control [FAIL]
     * Should reset the Registers and Special Registers to 0
     * Set all of Data Memory to 0
 
-- Implement HALT
+- Implement HALT [FAIL]
     * Either stop the clock from influencing the SCC
         ~ Use an AND gate on the input for Clock pins.
     * Or just interrupt the PC from updating
@@ -10,27 +10,27 @@
           that you don't start to continuously repeat a random
           instruction.
 
-- Testbench the Program Counter and using Branch instructions
+- Testbench the Program Counter and using Branch instructions [FAIL]
     * Test the IF and ID versions of the branching
 
-- Also testbench everything else ig
+- Also testbench everything else ig [FAIL]
 
-- Implement Load and Store
+- Implement Load and Store [FAIL]
     * Just interacting with the data memory
 
-- General fixes
+- General fixes [FAIL]
     * Fix up the variable names to be more meaningful
     * Make sure that important control lines (if not all of them)
       are being set low when unused
     * Comment all of the code
 
-- Instruction Memory
+- Instruction Memory [FAIL]
     * Use a .mem file and interact with a program
         ~ do whatever else that needs
         ~ (may need a full Instruction Memory module to load?)
 
-- Fix the CPSR functionality
+- Fix the CPSR functionality [FAIL]
     ~ Check logic previous discussed on monday
     ~ should be bangin
 
-- Maybe make the ALU take 33 bit inputs
+- Maybe make the ALU take 33 bit inputs [PASS]
