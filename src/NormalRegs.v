@@ -1,4 +1,4 @@
-module Reg_File(read_addr1, read_addr2, br_addr, write_addr, write_value_alu, write_value_id, write_data_sel, write_enable, clk, value1, value2, br_value);
+module NormalRegs(read_addr1, read_addr2, br_addr, write_addr, write_value_alu, write_value_id, write_data_sel, write_enable, clk, value1, value2, br_value);
 
     input [2:0] read_addr1, read_addr2;     // Two ports for reading from registers (3 bits to address 8 registers)
     input [2:0] br_addr;                    // Register accessed by a BR instruction (3 bits to address 8 regs)

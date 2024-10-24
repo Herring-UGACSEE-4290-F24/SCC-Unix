@@ -1,4 +1,4 @@
-module Instruction_Mem (reset, read_address, instruction_out);
+module Instruction_Mem(reset, read_address, instruction_out);
 
 input reset;
 input [31:0] read_address;
