@@ -39,13 +39,3 @@ module NormalRegs(read_addr1, read_addr2, br_addr, write_addr, write_value_alu, 
     end
 
 endmodule
-
-/* 
- * Separate registers for reserved (8 new regs) NOT USER ACCESSIBLE
- * Reg 7 should be CPSR -> (Formatted as ARMv8 is)
- * Reg 6 will be pc
- * LR
- * SP
- *
- * R0 is Zero Reg
- */
