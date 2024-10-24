@@ -19,7 +19,8 @@ module IF(clk, b_relAddr, write_enable, write_addr, write_value, br_value, instr
     output reg [2:0]    br_addr;            // Address of register containing the value to branch to
     input [31:0]        re_pc_val;          // Reads in the pc from the special registers
     output reg [31:0]   wr_pc_val = 32'b0;  // Program Counter: points to an address in instruction memory
-    output              wr_pc = 1;          // Enables writing to the PC register (in special regs)
+    // ***CHECK THIS*** I added "reg [1:0]" to below line
+    output reg  [1:0]    wr_pc = 1;          // Enables writing to the PC register (in special regs)
 
     reg [31:0]          offset;             // Amount to adjust the pc
     reg [31:0]          prefetch;           // Prefetching registers
@@ -35,6 +36,7 @@ module IF(clk, b_relAddr, write_enable, write_addr, write_value, br_value, instr
         offset[31:16] = {16{instruction_in[15]}};          // Duplicates the msb (sign extension)
         offset[15:0] = instruction_in[15:0];               // Copying the immediate value
         offset = offset * 4;                               // Left shifts (4 byte alligned)
+    end
     // =================================================== //
 
     // FOR HANDLING BRANCHES THAT ARE UNCONDITIONAL //
@@ -81,7 +83,8 @@ module IF(clk, b_relAddr, write_enable, write_addr, write_value, br_value, instr
             wr_pc_val = re_pc_val + 4;              // Increment the PC (4 byte alligned)
 
         end
-        wr_pc[1:0] = 'b00;                          // Ensures 4 bytes alignment
+        // ***CHECK THIS*** I added 2 to "2'b00"
+        wr_pc[1:0] = 2'b00;                         // Ensures 4 bytes alignment
         prefetch = instruction_in;                  // Prefetches the next instruction from IM
 
     end
