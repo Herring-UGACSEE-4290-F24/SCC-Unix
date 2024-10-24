@@ -29,7 +29,7 @@
         ~ do whatever else that needs
         ~ (may need a full Instruction Memory module to load?)
 
-- Fix the CPSR functionality [FAIL]
+- Fix the CPSR functionality [PASS]
     ~ Check logic previous discussed on monday
     ~ should be bangin
 
