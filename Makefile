@@ -9,7 +9,9 @@ SIMULATOR = iverilog
 
 #Source file written in verilog for SCC. Primary code files that are used to build SCC project.
 #Source Files (examples include  = scc.v alu.v reg_file.v (match to our groups file names)). Add any missing files on wednesday.
-SOURCE = $(SRC_DIR)/ALU.v $(SRC_DIR)/DM.v $(SRC_DIR)/EXE.v $(SRC_DIR)/ID.v $(SRC_DIR)/IF.v $(SRC_DIR)/Instruction_Mem.v $(SRC_DIR)/Reg_File_2.v $(SRC_DIR)/Reg_File.v $(SRC_DIR)/SCC.v
+#SOURCE = $(SRC_DIR)/ALU.v $(SRC_DIR)/DM.v $(SRC_DIR)/EXE.v $(SRC_DIR)/ID.v $(SRC_DIR)/IF.v $(SRC_DIR)/Instruction_Mem.v $(SRC_DIR)/Reg_File_2.v $(SRC_DIR)/Reg_File.v $(SRC_DIR)/SCC.v
+#SOURCE = src/ALU.v $(SRC_DIR)/DM.v $(SRC_DIR)/EXE.v $(SRC_DIR)/ID.v $(SRC_DIR)/IF.v $(SRC_DIR)/Instruction_Mem.v $(SRC_DIR)/Reg_File_2.v $(SRC_DIR)/Reg_File.v $(SRC_DIR)/SCC.v
+SOURCE = src/ALU.v src/DM.v src/EXE.v src/ID.v src/IF.v src/Instruction_Mem.v src/Reg_File_2.v src/Reg_File.v src/SCC.v
 
 #Testbench serves as the as a simulated environment where you can apply inputs to the design under test and observe its outputs
 TESTBENCH = $(TB_DIR)/Tb.v
@@ -33,7 +35,7 @@ run: $(EXECUTABLE)
 #view waveform (requires GTKwave)
 #Replace with 'gtkwave output.lxt2' for other group members
 view: run
-	gtkwave output.vcd
+	gtkwave dump.vcd
 
 #Remove generated files. Clean will remove the specified executable and any .vcd files, contributing to the cleanliness and manageability of your project.
 #Replace with 'rm -f $(EXECUTABLE) *.vcd *.lxt *.lxt2' for other group memebers
