@@ -2,7 +2,7 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_read, data_out, opcode, operand2, ir_op, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc);
+module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_val, data_read, data_write, data_out, opcode, operand2, ir_op, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc);
 
     input [31:0]        instruction;   // Instruction passed in from Instruction Memory 
     input               reset;         // Resets all main control lines
@@ -28,7 +28,9 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write
 // FOR CONTROLLING IM/DM BUSSES AND SIGNALS //
 // ======================================== //
     output [31:0]   data_addr;              // Controls the address of the data memory
+    input [31:0]    data_val;               // Value from memory
     output          data_read;              // Enables reading to the data memory
+    output          data_write;             // Enables writing to data memory
     output [31:0]   data_out;               // Value to write to data memory
 // ======================================== //
 
@@ -219,6 +221,7 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write
             LOAD: begin
                 write_addr = dest_reg;                  // destination register -> write address on register file
                 read_addr1 = mem_ptr_reg;               // pointer register -> a read address on register file
+                write_data = data_val;                  // write value from DM to the register
                 write_data_sel = 0;                     // makes value come from the ID
                 write_enable = 1;                       // enable write on the register file
                 data_addr = reg1_val + imm;             // add offset to value read at pointer address and send sum to dataMem input address

@@ -12,11 +12,12 @@ module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_
     output wire          data_read;       // control reading data
     output wire          data_write;      // control writing data
 
-    wire func_clk, reset_s, regWrite, regAddr, branchValue, instruction, branchAddress, pc_val, new_pc_val, write_pc_s, if_write_pc, id_write_pc, read_addr1_s, read_addr2_s, reg1_val_s, reg_data, reg_data_sel, alu_op_s, in_reg_s, op2_s, alu_result, new_cpsr_val, wr_cpsr_s;
+    wire func_clk, reset_s, regWrite, regAddr, branchValue, instruction, branchAddress, new_pc_val, write_pc_s, if_write_pc, id_write_pc, read_addr1_s, read_addr2_s, reg1_val_s, reg_data, reg_data_sel, alu_op_s, in_reg_s, op2_s, alu_result, new_cpsr_val, wr_cpsr_s;
 
     assign func_clk = clk & ~halt;
     assign new_pc_val = if_pc_val | id_pc_val;
     assign write_pc_s = if_write_pc | id_write_pc;
+    assign in_mem_en = 1;
 
     IF instructionFetch(.clk(func_clk), 
                         .reset(reset_s),  
@@ -24,7 +25,7 @@ module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_
                         .instruction_in(in_mem), 
                         .instruction_out(instruction), 
                         .br_addr(branchAddress), 
-                        .re_pc_val(pc_val), 
+                        .re_pc_val(in_mem_addr), 
                         .wr_pc_val(if_pc_val), 
                         .wr_pc(if_write_pc));
 
@@ -39,8 +40,10 @@ module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_
                          .write_data_sel(reg_data_sel), 
                          .write_enable(regWrite), 
                          .wr_cpsr(wr_cpsr_s), 
-                         .data_addr(data_addr), 
-                         .data_read(data_read), 
+                         .data_addr(data_addr),
+                         .data_val(data_in), 
+                         .data_read(data_read),
+                         .data_write(data_write), 
                          .data_out(data_out), 
                          .opcode(alu_op_s), 
                          .operand2(op2_s), 
@@ -100,7 +103,7 @@ module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_
                                     .re_r3(), 
                                     .re_sp(), 
                                     .re_lr(), 
-                                    .re_pc(pc_val), 
+                                    .re_pc(in_mem_addr), 
                                     .re_cpsr(cpsr_val), 
                                     .re_usr());
 

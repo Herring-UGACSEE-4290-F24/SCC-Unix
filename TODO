@@ -2,7 +2,7 @@
     * Should reset the Registers and Special Registers to 0
     * Set all of Data Memory to 0
 
-- Implement HALT [FAIL]
+- Implement HALT [PASS]
     * Either stop the clock from influencing the SCC
         ~ Use an AND gate on the input for Clock pins.
     * Or just interrupt the PC from updating
