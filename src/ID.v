@@ -2,9 +2,11 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_read, data_out, opcode, operand2, ir_op, re_cpsr_val, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
+module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_read, data_out, opcode, operand2, ir_op, re_cpsr_val, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
 
-    input [31:0]        instruction;   // Instruction passed in from Instruction Memory    
+    input [31:0]        instruction;   // Instruction passed in from Instruction Memory 
+    input               reset;         // Resets all main control lines
+    output              halt_flag;     // Will halt the SCC
 
 //   FOR CONTROLLING REG_FILE SIGNALS  //
 // =================================== //
@@ -113,8 +115,17 @@ module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data,
     assign shift_reg =     instruction[21:19];
     assign cond_flags =    instruction[24:21];
 
-    always @(*)
-    begin
+    always @(reset) begin
+        write_enable = 0;
+        data_write = 0;
+        wr_cpsr = 0;
+        wr_pc = 0;
+        pc_mux = 0;
+        branch_condition = 0;
+        halt_flag = 0;
+    end
+
+    always @(*) begin
 
         /*
          * Calculating the b_offset value for branch instructions
@@ -480,10 +491,10 @@ module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data,
                 wr_pc = 1;                              // enable writing to the pc
             end
             NOP: begin
-                // Does nothing, literally!
+                                                        // Does nothing, literally!
             end
             HALT: begin
-                // Just interrupt the clk (?)
+                halt_flag = 1;                          // Just interrupt the clk (?)
             end
             default:    $display("default case");
         endcase
