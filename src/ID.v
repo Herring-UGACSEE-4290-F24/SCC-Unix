@@ -2,7 +2,7 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_write_en, opcode, operand2, ir_op, re_cpsr_val, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
+module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_read, data_out, opcode, operand2, ir_op, re_cpsr_val, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
 
     input [31:0]        instruction;   // Instruction passed in from Instruction Memory    
 
@@ -26,7 +26,8 @@ module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data,
 // FOR CONTROLLING IM/DM BUSSES AND SIGNALS //
 // ======================================== //
     output [31:0]   data_addr;              // Controls the address of the data memory
-    output          data_write_en;          // Enables writing to the data memory
+    output          data_read;              // Enables reading to the data memory
+    output [31:0]   data_out                // Value to write to data memory
 // ======================================== //
 
 // FOR SENDING CONTROLS AND VALUES TO ALU //
@@ -120,13 +121,13 @@ module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data,
          */
         b_offset[31:16] = {16{instruction[15]}};          // Duplicates the msb (sign extension)
         b_offset[15:0] = instruction[15:0];               // Copying the immediate value
-        b_offset = b_offset * 4;                            // Left shifts (4 byte alligned)
+        b_offset = b_offset * 4;                          // Left shifts (4 byte alligned)
 
         // Set every important control line to 0 (?)
         // -> then an instruction can set it's controls how it needs
         // -> avoids write_enable being left high (very bad)
         write_enable = 0;
-        data_write_en = 0;
+        data_write = 0;
         wr_cpsr = 0;
         wr_pc = 0;
         pc_mux = 0;
@@ -212,16 +213,14 @@ module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data,
                 write_data_sel = 0;                     // makes value come from the ID
                 write_enable = 1;                       // enable write on the register file
                 data_addr = reg1_val + imm;             // add offset to value read at pointer address and send sum to dataMem input address
-                data_write_en = 1;                      // enable read from dataMem pass into write_data on register file
+                data_read = 1;                          // enable read from dataMem pass into write_data on register file
             end
             STOR: begin
-                // source register -> a read address on register file
-                // pointer register -> other read address on register file
-                // enable read on register file
-                // add offset to value read from pointer register
-                // send sum to dataMem input address
-                // send value from source register to data_input on dataMem
-                // enable write to dataMem
+                read_addr1 = src_reg;                   // source register -> a read address on register file
+                read_addr2 = mem_ptr_reg;               // pointer register -> other read address on register file
+                data_addr = reg2_val + imm;             // add offset to value read from pointer register + send sum to dataMem input address
+                data_out = reg1_val;                    // send value from source register to data_input on dataMem
+                data_write;                             // enable write to dataMem
             end
             MOV: begin
                 read_addr1 = dest_reg;                  // destination register -> read address on register file
