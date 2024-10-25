@@ -17,9 +17,10 @@
  *  - We don't need direct access to the LR, BL 
  */
 
-module SpecialRegs(usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_data, wr_sp_data, wr_lr_data, wr_pc_data, wr_cpsr_data, wr_usr_enable, wr_zr, wr_r1, wr_r2, wr_r3, wr_sp, wr_lr, wr_pc, wr_cpsr,
-                 write_usr_addr, read_usr_addr, clk, re_zr, re_r1, re_r2, re_r3, re_sp, re_lr, re_pc, re_cpsr, re_usr);
-    
+module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_data, wr_sp_data, wr_lr_data, wr_pc_data, wr_cpsr_data, wr_usr_enable, 
+                    wr_zr, wr_r1, wr_r2, wr_r3, wr_sp, wr_lr, wr_pc, wr_cpsr, write_usr_addr, read_usr_addr, clk, re_zr, re_r1, re_r2, re_r3, re_sp, re_lr, re_pc, re_cpsr, re_usr);
+
+    input reset;
     input [31:0] usr_data;                     // defining data lines
     input [31:0] wr_zr_data;
     input [31:0] wr_r1_data;
@@ -58,19 +59,30 @@ module SpecialRegs(usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_data, wr_
 
     output wire [31:0] re_usr;
 
-    assign re_zr = regs[0];
-    assign re_r1 = regs[1];
-    assign re_r2 = regs[2];
-    assign re_r3 = regs[3];
-    assign re_sp = regs[4];
-    assign re_lr = regs[5];
-    assign re_pc = regs[6];
-    assign re_cpsr = regs[7];
+    assign re_zr   = spc_regs[0];
+    assign re_r1   = spc_regs[1];
+    assign re_r2   = spc_regs[2];
+    assign re_r3   = spc_regs[3];
+    assign re_sp   = spc_regs[4];
+    assign re_lr   = spc_regs[5];
+    assign re_pc   = spc_regs[6];
+    assign re_cpsr = spc_regs[7];
 
-    assign re_usr = regs[read_usr_addr];
+    assign re_usr = spc_regs[read_usr_addr];
 
     initial begin                                                     // Sending stored values to waveform
-        $dumpvars(0, regs[0], regs[1], regs[2], regs[3], regs[4], regs[5], regs[6], regs[7]);
+        $dumpvars(0, spc_regs[0], spc_regs[1], spc_regs[2], spc_regs[3], spc_regs[4], spc_regs[5], spc_regs[6], spc_regs[7]);
+    end
+
+    always @(reset) begin
+        spc_regs[0] <= 0;
+        spc_regs[1] <= 0;
+        spc_regs[2] <= 0;
+        spc_regs[3] <= 0;
+        spc_regs[4] <= 0;
+        spc_regs[5] <= 0;
+        spc_regs[6] <= 0;
+        spc_regs[7] <= 0;
     end
 
     always @(posedge clk) begin                                        // static design controlled by rising clock edge
