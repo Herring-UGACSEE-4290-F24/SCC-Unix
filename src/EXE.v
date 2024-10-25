@@ -9,12 +9,12 @@ module EXE(reg1_val, reg2_val, immediate, alu_oc, ir_op, result, wr_cpsr_val);
 
     reg [31:0]          op1;
     reg [31:0]          op2;
-    reg                 carry;
+    wire                carry;
     ALU alu1(
         .operand1 (op1),
         .operand2 (op2),
         .opcode (alu_oc),
-        .result (result),
+        .res_out (result),
         .overflow (carry)
     );
 

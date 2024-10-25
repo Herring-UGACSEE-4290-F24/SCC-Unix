@@ -15,7 +15,7 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
     output reg [2:0]    br_addr;            // Address of register containing the value to branch to
     input [31:0]        re_pc_val;          // Reads in the pc from the special registers
     output reg [31:0]   wr_pc_val = 32'b0;  // Program Counter: points to an address in instruction memory
-    output              wr_pc = 1;          // Enables writing to the PC register (in special regs)
+    output reg          wr_pc = 1;          // Enables writing to the PC register (in special regs)
 
     reg [31:0]          offset;             // Amount to adjust the pc
     reg [31:0]          prefetch;           // Prefetching registers

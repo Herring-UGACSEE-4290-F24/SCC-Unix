@@ -8,7 +8,7 @@ module ALU(operand1, operand2, opcode, res_out, overflow);
 
     // ALU outputs
     reg [32:0] result;
-    output [31:0] res_out;
+    output reg [31:0] res_out;
     output reg overflow;
 
     // ALU Operation Commands //

@@ -1,7 +1,7 @@
-module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_out, data_read, data_write);
+module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_out, data_read, data_write);
 
     input           clk;             // main clock signal
-    input           reset;           // sets all regs to known state
+    input           reset_s;           // sets all regs to known state
     input [31:0]    in_mem;          // instructions being fetched
     input [31:0]    data_in;         // data read from memory
 
@@ -12,7 +12,9 @@ module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_
     output wire          data_read;       // control reading data
     output wire          data_write;      // control writing data
 
-    wire func_clk, reset_s, regWrite, regAddr, branchValue, instruction, branchAddress, new_pc_val, write_pc_s, if_write_pc, id_write_pc, read_addr1_s, read_addr2_s, reg1_val_s, reg_data, reg_data_sel, alu_op_s, in_reg_s, op2_s, alu_result, new_cpsr_val, wr_cpsr_s;
+    wire func_clk, halt, regWrite, write_pc_s, if_write_pc, id_write_pc, reg_data_sel, in_reg_s, wr_cpsr_s;
+    wire [31:0] instruction, if_pc_val, branchValue, reg1_val_s, reg_data, op2_s, cpsr_val, pc_val, id_pc_val, reg2_val_s, alu_result, new_cpsr_val, new_pc_val;
+    wire [2:0] branchAddress, read_addr1_s, read_addr2_s, regAddr, alu_op_s;
 
     assign func_clk = clk & ~halt;
     assign new_pc_val = if_pc_val | id_pc_val;
@@ -34,7 +36,8 @@ module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_
                          .halt_flag(halt), 
                          .read_addr1(read_addr1_s), 
                          .read_addr2(read_addr2_s), 
-                         .reg1_val(reg1_val_s), 
+                         .reg1_val(reg1_val_s),
+                         .reg2_val(reg2_val_s), 
                          .write_addr(regAddr), 
                          .write_data(reg_data), 
                          .write_data_sel(reg_data_sel), 

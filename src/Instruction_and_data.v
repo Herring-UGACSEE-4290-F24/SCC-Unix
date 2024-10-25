@@ -1,19 +1,21 @@
-module Instruction_and_data
-(
-  input mem_Clk,
-  input instruction_memory_en,
-  input [31:0] instruction_memory_a,
-  input [31:0] data_memory_a,
-  input data_memory_read, 
-  input data_memory_write,
-  input [31:0] data_memory_out_v,
-  output reg [31:0] instruction_memory_v,
-  output reg [31:0] data_memory_in_v
-);
+module Instruction_and_data(mem_Clk, instruction_memory_en, instruction_memory_a, data_memory_a, data_memory_read, data_memory_write, data_memory_out_v, instruction_memory_v, data_memory_in_v);
+
+input wire mem_Clk;
+input wire instruction_memory_en;
+input wire [31:0] instruction_memory_a;
+input wire [31:0] data_memory_a;
+input wire data_memory_read;
+input wire data_memory_write;
+input wire [31:0] data_memory_out_v;
+output reg [31:0] instruction_memory_v;
+output reg [31:0] data_memory_in_v;
+
 reg [7:0] memory [0:(2**16)-1] ; //Maximum array to hold both instruction and data memory
+
 initial begin
   $readmemh("output.mem", memory);
-  end
+end
+
 always @(mem_Clk) begin
     if(instruction_memory_en)begin //Grabs 32 bit instruction
     instruction_memory_v[31:24] <= memory[instruction_memory_a];

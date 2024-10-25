@@ -46,7 +46,7 @@ module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_da
 
     input clk;
 
-    reg [31:0] regs [0:7];  
+    reg [31:0] spc_regs [0:7];  
 
     output wire [31:0] re_zr;
     output wire [31:0] re_r1;
@@ -59,14 +59,14 @@ module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_da
 
     output wire [31:0] re_usr;
 
-    assign re_zr   = spc_regs[0];
-    assign re_r1   = spc_regs[1];
-    assign re_r2   = spc_regs[2];
-    assign re_r3   = spc_regs[3];
-    assign re_sp   = spc_regs[4];
-    assign re_lr   = spc_regs[5];
-    assign re_pc   = spc_regs[6];
-    assign re_cpsr = spc_regs[7];
+    assign   re_zr[31:0]   = spc_regs[0];
+    assign   re_r1[31:0]   = spc_regs[1];
+    assign   re_r2[31:0]   = spc_regs[2];
+    assign   re_r3[31:0]   = spc_regs[3];
+    assign   re_sp[31:0]   = spc_regs[4];
+    assign   re_lr[31:0]   = spc_regs[5];
+    assign   re_pc[31:0]   = spc_regs[6];
+    assign re_cpsr[31:0]   = spc_regs[7];
 
     assign re_usr = spc_regs[read_usr_addr];
 
@@ -87,32 +87,32 @@ module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_da
 
     always @(posedge clk) begin                                        // static design controlled by rising clock edge
         if (wr_zr == 1) begin
-            regs[0] <= wr_zr_data;
+            spc_regs[0] <= wr_zr_data;
         end
         if (wr_r1 == 1) begin
-            regs[1] <= wr_r1_data;
+            spc_regs[1] <= wr_r1_data;
         end
         if (wr_r2 == 1) begin
-            regs[2] <= wr_r2_data;
+            spc_regs[2] <= wr_r2_data;
         end
         if (wr_r3 == 1) begin
-            regs[3] <= wr_r3_data;
+            spc_regs[3] <= wr_r3_data;
         end
         if (wr_sp == 1) begin
-            regs[4] <= wr_sp_data;
+            spc_regs[4] <= wr_sp_data;
         end
         if (wr_lr == 1) begin
-            regs[5] <= wr_lr_data;
+            spc_regs[5] <= wr_lr_data;
         end
         if (wr_pc == 1) begin
-            regs[6] <= wr_pc_data;
+            spc_regs[6] <= wr_pc_data;
         end
         if (wr_cpsr == 1) begin
-            regs[7] <= wr_cpsr_data;
+            spc_regs[7] <= wr_cpsr_data;
         end
-         
+
         if (wr_usr_enable == 1) begin
-            regs[write_usr_addr] <= usr_data;
+            spc_regs[write_usr_addr] <= usr_data;
         end 
 
     end    

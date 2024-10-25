@@ -12,7 +12,7 @@ module NormalRegs(reset, read_addr1, read_addr2, br_addr, write_addr, write_valu
     input clk;                              // Static design requires a clock
 
     output wire [31:0] reg1_val, reg2_val;  // Values retrieved from registers at read_addr1 and read_addr2
-    output wire [31:0] br_value;            // Value for the BR instruction to branch to    
+    output reg  [31:0] br_value;            // Value for the BR instruction to branch to    
 
     reg [31:0] nor_regs [0:7];              // Actual register layout (8 registers that are 32 bits long)
 

@@ -2,11 +2,11 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_val, data_read, data_write, data_out, opcode, operand2, ir_op, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc);
+module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_val, data_read, data_write, data_out, opcode, operand2, ir_op, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc);
 
     input [31:0]        instruction;   // Instruction passed in from Instruction Memory 
     input               reset;         // Resets all main control lines
-    output              halt_flag;     // Will halt the SCC
+    output reg          halt_flag;     // Will halt the SCC
 
 //   FOR CONTROLLING REG_FILE SIGNALS  //
 // =================================== //
@@ -18,6 +18,7 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write
     output reg [2:0]    read_addr1;    // First address to read from
     output reg [2:0]    read_addr2;    // Second address to read from
     input [31:0]        reg1_val;      // Value at first address' reg
+    input [31:0]        reg2_val;      // Value at second address' reg
     output reg [2:0]    write_addr;    // Address to write to
     output reg [31:0]   write_data;    // Data to write at address
     output reg          write_data_sel;// Determines if value being written to regs is from alu result or elsewhere
@@ -27,11 +28,11 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write
 
 // FOR CONTROLLING IM/DM BUSSES AND SIGNALS //
 // ======================================== //
-    output [31:0]   data_addr;              // Controls the address of the data memory
-    input [31:0]    data_val;               // Value from memory
-    output          data_read;              // Enables reading to the data memory
-    output          data_write;             // Enables writing to data memory
-    output [31:0]   data_out;               // Value to write to data memory
+    output reg [31:0]  data_addr;           // Controls the address of the data memory
+    input [31:0]       data_val;            // Value from memory
+    output reg         data_read;           // Enables reading to the data memory
+    output reg         data_write;          // Enables writing to data memory
+    output reg [31:0]  data_out;            // Value to write to data memory
 // ======================================== //
 
 // FOR SENDING CONTROLS AND VALUES TO ALU //
@@ -232,7 +233,7 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write
                 read_addr2 = mem_ptr_reg;               // pointer register -> other read address on register file
                 data_addr = reg2_val + imm;             // add offset to value read from pointer register + send sum to dataMem input address
                 data_out = reg1_val;                    // send value from source register to data_input on dataMem
-                data_write;                             // enable write to dataMem
+                data_write = 1;                         // enable write to dataMem
             end
             MOV: begin
                 read_addr1 = dest_reg;                  // destination register -> read address on register file
