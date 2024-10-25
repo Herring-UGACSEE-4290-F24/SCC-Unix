@@ -12,9 +12,11 @@ module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_
     output wire          data_read;       // control reading data
     output wire          data_write;      // control writing data
 
-    wire func_clk, reset_s, regWrite, regAddr, branchValue, instruction, branchAddress, pc_val;
+    wire func_clk, reset_s, regWrite, regAddr, branchValue, instruction, branchAddress, pc_val, new_pc_val, write_pc_s, if_write_pc, id_write_pc, read_addr1_s, read_addr2_s, reg1_val_s, reg_data, reg_data_sel, alu_op_s, in_reg_s, op2_s, alu_result, new_cpsr_val, wr_cpsr_s;
 
     assign func_clk = clk & ~halt;
+    assign new_pc_val = if_pc_val | id_pc_val;
+    assign write_pc_s = if_write_pc | id_write_pc;
 
     IF instructionFetch(.clk(func_clk), 
                         .reset(reset_s),  
@@ -23,53 +25,51 @@ module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_
                         .instruction_out(instruction), 
                         .br_addr(branchAddress), 
                         .re_pc_val(pc_val), 
-                        .wr_pc_val(new_pc_val), 
-                        .wr_pc(write_pc));
+                        .wr_pc_val(if_pc_val), 
+                        .wr_pc(if_write_pc));
 
     ID instructionDecode(.instruction(instruction), 
                          .reset(reset_s), 
-                         .halt_flag(), 
-                         .read_addr1(), 
-                         .read_addr2(), 
-                         .reg1_val(), 
+                         .halt_flag(halt), 
+                         .read_addr1(read_addr1_s), 
+                         .read_addr2(read_addr2_s), 
+                         .reg1_val(reg1_val_s), 
                          .write_addr(regAddr), 
-                         .write_data(), 
-                         .write_data_sel(), 
+                         .write_data(reg_data), 
+                         .write_data_sel(reg_data_sel), 
                          .write_enable(regWrite), 
-                         .wr_cpsr(), 
-                         .data_addr(), 
-                         .data_read(), 
-                         .data_out(), 
-                         .opcode(), 
-                         .operand2(), 
-                         .ir_op(), 
-                         .re_cpsr_val(), 
-                         .re_cpsr_val(), 
+                         .wr_cpsr(wr_cpsr_s), 
+                         .data_addr(data_addr), 
+                         .data_read(data_read), 
+                         .data_out(data_out), 
+                         .opcode(alu_op_s), 
+                         .operand2(op2_s), 
+                         .ir_op(in_reg_s), 
+                         .re_cpsr_val(cpsr_val),  
                          .re_pc_val(pc_val), 
-                         .wr_pc_val(), 
-                         .wr_pc(), 
-                         .pc_mux());
+                         .wr_pc_val(id_pc_val), 
+                         .wr_pc(id_write_pc));
 
-    EXE executeModule(.reg1_val(), 
-                      .reg2_val(), 
-                      .immediate(), 
-                      .alu_oc(), 
-                      .ir_op(), 
-                      .result(), 
-                      .wr_cpsr_val());
+    EXE executeModule(.reg1_val(reg1_val_s), 
+                      .reg2_val(reg2_val_s), 
+                      .immediate(op2_s), 
+                      .alu_oc(alu_op_s), 
+                      .ir_op(in_reg_s), 
+                      .result(alu_result), 
+                      .wr_cpsr_val(new_cpsr_val));
 
     NormalRegs normalRegisterFile(.reset(reset_s), 
-                                  .read_addr1(), 
-                                  .read_addr2(), 
+                                  .read_addr1(read_addr1_s), 
+                                  .read_addr2(read_addr2_s), 
                                   .br_addr(branchAddress), 
                                   .write_addr(regAddr), 
-                                  .write_value_alu(), 
-                                  .write_value_id(), 
-                                  .write_data_sel(), 
+                                  .write_value_alu(alu_result), 
+                                  .write_value_id(reg_data), 
+                                  .write_data_sel(reg_data_sel), 
                                   .write_enable(regWrite), 
                                   .clk(func_clk), 
-                                  .reg1_val(), 
-                                  .reg2_val(), 
+                                  .reg1_val(reg1_val_s), 
+                                  .reg2_val(reg2_val_s), 
                                   .br_value(branchValue));
 
     SpecialRegs specialRegisterFile(.reset(reset_s), 
@@ -81,7 +81,7 @@ module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_
                                     .wr_sp_data(), 
                                     .wr_lr_data(), 
                                     .wr_pc_data(new_pc_val), 
-                                    .wr_cpsr_data(), 
+                                    .wr_cpsr_data(new_cpsr_val), 
                                     .wr_usr_enable(), 
                                     .wr_zr(), 
                                     .wr_r1(), 
@@ -89,8 +89,8 @@ module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_
                                     .wr_r3(), 
                                     .wr_sp(), 
                                     .wr_lr(), 
-                                    .wr_pc(write_pc), 
-                                    .wr_cpsr(), 
+                                    .wr_pc(write_pc_s), 
+                                    .wr_cpsr(wr_cpsr_s), 
                                     .write_usr_addr(), 
                                     .read_usr_addr(), 
                                     .clk(func_clk), 
@@ -101,7 +101,7 @@ module SCC(clk, reset, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_
                                     .re_sp(), 
                                     .re_lr(), 
                                     .re_pc(pc_val), 
-                                    .re_cpsr(), 
+                                    .re_cpsr(cpsr_val), 
                                     .re_usr());
 
 endmodule

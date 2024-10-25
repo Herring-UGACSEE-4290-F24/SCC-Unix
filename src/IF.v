@@ -27,6 +27,7 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
 
     always @(posedge clk) begin
 
+        wr_pc_val = 0;
     // FOR HANDLING THE IMMEDIATE/OFFSET FIELD IN B and BR //
     // =================================================== //
     // This will grab the lower 16 bits of the instruction //

@@ -2,7 +2,7 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_read, data_out, opcode, operand2, ir_op, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
+module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_read, data_out, opcode, operand2, ir_op, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc);
 
     input [31:0]        instruction;   // Instruction passed in from Instruction Memory 
     input               reset;         // Resets all main control lines
@@ -52,7 +52,6 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write
     reg [31:0]          b_offset;           // Holds the offset for branches
     output reg [31:0]   wr_pc_val;          // Value to write to the pc
     output reg          wr_pc;              // Enable line to store into pc
-    output reg          pc_mux;             // Mux that allows the IF or ID to control the pc (0 -> IF, 1 -> ID)
 // ====================== //
 
 // BITFIELD AGRUMENT SPLITTING //
@@ -120,7 +119,6 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write
         data_write = 0;
         wr_cpsr = 0;
         wr_pc = 0;
-        pc_mux = 0;
         branch_condition = 0;
         halt_flag = 0;
     end
@@ -141,8 +139,8 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write
         data_write = 0;
         wr_cpsr = 0;
         wr_pc = 0;
-        pc_mux = 0;
         branch_condition = 0;
+        wr_pc_val = 0;
 
         /*
          * Case statement to decide whether a branch should be taken
@@ -474,21 +472,15 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write
             end
             B: begin
                 wr_pc_val = re_pc_val + b_offset;       // write the value of the program counter + offset to pc
-                pc_mux = 1;                             // select that the pc updates from the ID
-                wr_pc = 1;                              // enable writing to the pc
             end
             Bcond: begin
                 if (branch_condition) begin             // if condition (set in EXE) is met
                     wr_pc_val = re_pc_val + b_offset;   // write the value of the program counter + offset to pc
-                    pc_mux = 1;                         // select that the pc updates from the ID
-                    wr_pc = 1;                          // enable writing to the pc
                 end
             end
             BR: begin
                 read_addr1 = br_ptr_reg;                // br_ptr_reg -> read address on reg file
                 wr_pc_val = reg1_val + b_offset;        // write the value of the program counter + offset to pc
-                pc_mux = 1;                             // select that the pc updates from the ID
-                wr_pc = 1;                              // enable writing to the pc
             end
             NOP: begin
                                                         // Does nothing, literally!
