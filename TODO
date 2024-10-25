@@ -1,4 +1,4 @@
-- Add reset control [FAIL]
+- Add reset control [PASS]
     * Should reset the Registers and Special Registers to 0
     * Set all of Data Memory to 0
 
@@ -15,16 +15,16 @@
 
 - Also testbench everything else ig [FAIL]
 
-- Implement Load and Store [FAIL]
+- Implement Load and Store [PASS]
     * Just interacting with the data memory
 
-- General fixes [FAIL]
+- General fixes [PASS]
     * Fix up the variable names to be more meaningful #
     * Make sure that important control lines (if not all of them)
       are being set low when unused
     * Comment all of the code
 
-- Instruction Memory [FAIL]
+- Instruction Memory [PASS]
     * Use a .mem file and interact with a program
         ~ do whatever else that needs
         ~ (may need a full Instruction Memory module to load?)

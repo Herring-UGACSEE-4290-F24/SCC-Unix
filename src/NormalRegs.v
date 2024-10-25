@@ -18,8 +18,6 @@ module NormalRegs(reset, read_addr1, read_addr2, br_addr, write_addr, write_valu
 
     assign reg1_val = nor_regs[read_addr1]; // Read value in register pointed at by read_addr1
     assign reg2_val = nor_regs[read_addr2]; // Read value in register pointed at by read_addr2
-    assign br_value = nor_regs[br_addr];    // Read value in register pointed at by br_addr
-
    
     initial begin                                          // used for testbenching
         $dumpvars(0, nor_regs[0], nor_regs[1], nor_regs[2], nor_regs[3], nor_regs[4], nor_regs[5], nor_regs[6], nor_regs[7]); 
@@ -41,12 +39,14 @@ module NormalRegs(reset, read_addr1, read_addr2, br_addr, write_addr, write_valu
         if (write_enable) begin                            // When the write_enable is HIGH
 
             if (write_data_sel) begin                      // Chooses if data comes from ALU or ID
-                nor_regs[write_addr] <= write_value_alu;   // Store write_value_alu in register at address write_addr
+                nor_regs[write_addr] = write_value_alu;    // Store write_value_alu in register at address write_addr
             end else begin
-                nor_regs[write_addr] <= write_value_id;    // Store write_value_id in register at address write_addr
+                nor_regs[write_addr] = write_value_id;     // Store write_value_id in register at address write_addr
             end
             
         end
+
+        br_value = nor_regs[br_addr];                      // Read value in register pointed at by br_addr
 
     end
 

@@ -2,15 +2,10 @@
  * This module defines the Instruction Fetch (IF) implementation by the Linux SCC group. IF keeps track
  * of the program counter (PC) which points to a word address in Instruction Memory (IM). 
  */
-module IF(clk, reset, b_relAddr, write_enable, write_addr, write_value, br_value, instruction_in, instruction_out, br_addr, re_pc_val, wr_pc_val, wr_pc);
+module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_val, wr_pc_val, wr_pc);
 
     input               clk;                // Clock signal
     input               reset;              // Reset signal
-    input [15:0]        b_relAddr;          // Amount to branch relative to current PC
-
-    input               write_enable;       // Signal sent from ID when the register files are being written to
-    input [2:0]         write_addr;         // Address in register file being written to 
-    input [31:0]        write_value;        // Value being written to the register file
 
     input [31:0]        br_value;           // Value retrieved from register pointed to by br_addr
 
@@ -49,8 +44,6 @@ module IF(clk, reset, b_relAddr, write_enable, write_addr, write_value, br_value
     // from the current program counter value while //
     // BR will need to access the registers through //
     // using the inputs/outputs on the module.      //
-    // - - - - - - - - - - - - - - - - - - - - - -  //
-
     // ============================================ //
 
     // FOR HANDLING CONDITIONAL AND NON BRANCH INSTRUCTIONS //
@@ -61,8 +54,6 @@ module IF(clk, reset, b_relAddr, write_enable, write_addr, write_value, br_value
     // the ID, and will then update the value based on the  //
     // value in the instruction. All other instruction will //
     // implement the pc as normal, 4 bytes per instruction. //
-    // - - - - - - - - - - - - - - - - - - - - - - - - - -  //
-
     // ==================================================== //
 
         instruction_out = prefetch;
@@ -73,19 +64,14 @@ module IF(clk, reset, b_relAddr, write_enable, write_addr, write_value, br_value
         end else if (instruction_in[31:25] == 'b1100010) begin
 
             br_addr = instruction_in[24:22];        // Uses bitfield to fetch address of register
-            // If the registers are being written to, and the register being accessed is the target //
-            if (write_enable && br_addr == write_addr) begin
-                wr_pc_val = write_value + offset;   // Update pc to the value being written +/- the offset
-            end else begin                          // Otherwise, there is no hazard is accessing a value to read
-                wr_pc_val = br_value + offset;      // Update pc to address in the register pointed to by br_addr +/- the offset
-            end
+            wr_pc_val = br_value + offset;          // Update pc to address in the register pointed to by br_addr +/- the offset
 
         end else begin
 
             wr_pc_val = re_pc_val + 4;              // Increment the PC (4 byte alligned)
 
         end
-        wr_pc[1:0] = 'b00;                          // Ensures 4 bytes alignment
+        wr_pc_val[1:0] = 'b00;                          // Ensures 4 bytes alignment
         prefetch = instruction_in;                  // Prefetches the next instruction from IM
 
     end

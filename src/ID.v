@@ -2,7 +2,7 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_read, data_out, opcode, operand2, ir_op, re_cpsr_val, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
+module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_read, data_out, opcode, operand2, ir_op, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
 
     input [31:0]        instruction;   // Instruction passed in from Instruction Memory 
     input               reset;         // Resets all main control lines
@@ -29,7 +29,7 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write
 // ======================================== //
     output [31:0]   data_addr;              // Controls the address of the data memory
     output          data_read;              // Enables reading to the data memory
-    output [31:0]   data_out                // Value to write to data memory
+    output [31:0]   data_out;               // Value to write to data memory
 // ======================================== //
 
 // FOR SENDING CONTROLS AND VALUES TO ALU //
@@ -494,7 +494,7 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, write
                                                         // Does nothing, literally!
             end
             HALT: begin
-                halt_flag = 1;                          // Just interrupt the clk (?)
+                halt_flag = 1;                          // Will send a signal that prevents the clock from updating
             end
             default:    $display("default case");
         endcase
