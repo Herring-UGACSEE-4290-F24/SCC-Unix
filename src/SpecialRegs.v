@@ -9,12 +9,6 @@
  * R5 --> Link Register (LR)
  * R6 --> Program Counter (PC)
  * R7 --> CPSR (NZCV....+)
- * 
- * Jake's thoughts: 
- * -----------------------------------
- *  - Design mostly as single port write, single port read 
- *  - Should be channels where there is direct access to CPSR & PC
- *  - We don't need direct access to the LR, BL 
  */
 
 module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_data, wr_sp_data, wr_lr_data, wr_pc_data, wr_cpsr_data, wr_usr_enable, 
@@ -87,32 +81,32 @@ module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_da
 
     always @(posedge clk) begin                                        // static design controlled by rising clock edge
         if (wr_zr == 1) begin
-            spc_regs[0] <= wr_zr_data;
+            spc_regs[0] = wr_zr_data;
         end
         if (wr_r1 == 1) begin
-            spc_regs[1] <= wr_r1_data;
+            spc_regs[1] = wr_r1_data;
         end
         if (wr_r2 == 1) begin
-            spc_regs[2] <= wr_r2_data;
+            spc_regs[2] = wr_r2_data;
         end
         if (wr_r3 == 1) begin
-            spc_regs[3] <= wr_r3_data;
+            spc_regs[3] = wr_r3_data;
         end
         if (wr_sp == 1) begin
-            spc_regs[4] <= wr_sp_data;
+            spc_regs[4] = wr_sp_data;
         end
         if (wr_lr == 1) begin
-            spc_regs[5] <= wr_lr_data;
+            spc_regs[5] = wr_lr_data;
         end
         if (wr_pc == 1) begin
-            spc_regs[6] <= wr_pc_data;
+            spc_regs[6] = wr_pc_data;
         end
         if (wr_cpsr == 1) begin
-            spc_regs[7] <= wr_cpsr_data;
+            spc_regs[7] = wr_cpsr_data;
         end
 
         if (wr_usr_enable == 1) begin
-            spc_regs[write_usr_addr] <= usr_data;
+            spc_regs[write_usr_addr] = usr_data;
         end 
 
     end    
