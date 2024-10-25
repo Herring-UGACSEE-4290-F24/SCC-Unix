@@ -19,7 +19,7 @@
     * Just interacting with the data memory
 
 - General fixes [FAIL]
-    * Fix up the variable names to be more meaningful
+    * Fix up the variable names to be more meaningful #
     * Make sure that important control lines (if not all of them)
       are being set low when unused
     * Comment all of the code

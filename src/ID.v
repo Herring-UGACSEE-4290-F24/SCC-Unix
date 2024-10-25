@@ -2,7 +2,7 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write_data, write_data_sel, write_enable, wr_cpsr_val, wr_cpsr, opcode, operand2, ir_op, re_cpsr_val, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
+module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, opcode, operand2, ir_op, re_cpsr_val, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
 
     input [31:0]        instruction;   // Instruction passed in from Instruction Memory    
 
@@ -15,13 +15,11 @@ module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write
 // - - - - - - - - - - - - - - - - - - //
     output reg [2:0]    read_addr1;    // First address to read from
     output reg [2:0]    read_addr2;    // Second address to read from
-    input [31:0]        value1;        // Value at first address' reg
-    input [31:0]        value2;        // Value at second address' reg
+    input [31:0]        reg1_val;      // Value at first address' reg
     output reg [2:0]    write_addr;    // Address to write to
     output reg [31:0]   write_data;    // Data to write at address
     output reg          write_data_sel;// Determines if value being written to regs is from alu result or elsewhere
     output reg          write_enable;  // Enable writing data to address
-    output reg [31:0]   wr_cpsr_val;   //
     output reg          wr_cpsr;       // Enable writing to the cpsr
 // =================================== //
 
@@ -58,7 +56,6 @@ module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write
     wire              s;             // special single bit for data instructions, bits 29
     wire [3:0]        sld;           // single-level-decode, bits 28-25
     wire [2:0]        alu_oc;        // opcode for ALU, bits 27-25
-
     wire [2:0]        dest_reg;      // destination register, bits 24-22
     wire [2:0]        mem_ptr_reg;   // pointer register for memory instructions, bits 21-19
     wire [2:0]        br_ptr_reg;    // branch pointer, bits 24-22
@@ -222,7 +219,7 @@ module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write
             MOV: begin
                 read_addr1 = dest_reg;                  // destination register -> read address on register file
                 write_addr = dest_reg;                  // destination register -> write address on register file
-                write_data[31:16] = value1[31:16];      // copy value from most significant 2 bytes to remain constant
+                write_data[31:16] = reg1_val[31:16];    // copy value from most significant 2 bytes to remain constant
                 write_data[15:0] = imm[15:0];           // immediate -> write_data on register file, stores into the least significant 2 bytes
                 write_data_sel = 0;                     // write a value originating from the ID
                 write_enable = 1;                       // enable write on register file
@@ -230,7 +227,7 @@ module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write
             MOVT: begin
                 read_addr1 = dest_reg;                  // destination register -> read address on register file
                 write_addr = dest_reg;                  // destination register -> write address on register file
-                write_data[15:0] = value1[15:0];        // copy value from least significant 2 bytes to remain constant
+                write_data[15:0] = reg1_val[15:0];      // copy value from least significant 2 bytes to remain constant
                 write_data[31:16] = imm[15:0];          // immediate -> write_data on register file, stores into the most significant 2 bytes
                 write_data_sel = 0;                     // write a value originating from the ID
                 write_enable = 1;                       // enable write on register file
@@ -333,13 +330,13 @@ module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write
             LSL: begin
                 read_addr1 = shift_reg;                 // shift_reg -> a read address on register file
                 write_addr = dest_reg;                  // dest_reg -> a write address on register file
-                write_data = value1 << imm;             // write the returned value with a bit-shift
+                write_data = reg1_val << imm;           // write the returned value with a bit-shift
                 write_enable = 1;                       // enable write on register
             end
             LSR: begin
                 read_addr1 = shift_reg;                 // shift_reg -> a read address on register file
                 write_addr = dest_reg;                  // dest_reg -> a write address on register file
-                write_data = value1 >> imm;             // write the returned value with a bit-shift
+                write_data = reg1_val >> imm;           // write the returned value with a bit-shift
                 write_enable = 1;                       // enable write on register
             end
             CLR: begin
@@ -470,7 +467,7 @@ module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write
             end
             BR: begin
                 read_addr1 = br_ptr_reg;                // br_ptr_reg -> read address on reg file
-                wr_pc_val = value1 + b_offset;          // write the value of the program counter + offset to pc
+                wr_pc_val = reg1_val + b_offset;        // write the value of the program counter + offset to pc
                 pc_mux = 1;                             // select that the pc updates from the ID
                 wr_pc = 1;                              // enable writing to the pc
             end
@@ -478,7 +475,7 @@ module ID(instruction, read_addr1, read_addr2, value1, value2, write_addr, write
                 // Does nothing, literally!
             end
             HALT: begin
-                
+                // Just interrupt the clk (?)
             end
             default:    $display("default case");
         endcase

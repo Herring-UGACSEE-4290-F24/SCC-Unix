@@ -1,4 +1,4 @@
-module NormalRegs(read_addr1, read_addr2, br_addr, write_addr, write_value_alu, write_value_id, write_data_sel, write_enable, clk, value1, value2, br_value);
+module NormalRegs(read_addr1, read_addr2, br_addr, write_addr, write_value_alu, write_value_id, write_data_sel, write_enable, clk, reg1_val, reg2_val, br_value);
 
     input [2:0] read_addr1, read_addr2;     // Two ports for reading from registers (3 bits to address 8 registers)
     input [2:0] br_addr;                    // Register accessed by a BR instruction (3 bits to address 8 regs)
@@ -10,13 +10,13 @@ module NormalRegs(read_addr1, read_addr2, br_addr, write_addr, write_value_alu, 
 
     input clk;                              // Static design requires a clock
 
-    output wire [31:0] value1, value2;      // Values retrieved from registers at read_addr1 and read_addr2
+    output wire [31:0] reg1_val, reg2_val;      // Values retrieved from registers at read_addr1 and read_addr2
     output wire [31:0] br_value;            // Value for the BR instruction to branch to    
 
     reg [31:0] registers [0:7];             // Actual register layout (8 registers that are 32 bits long)
 
-    assign value1 = registers[read_addr1];  // Read value in register pointed at by read_addr1
-    assign value2 = registers[read_addr2];  // Read value in register pointed at by read_addr2
+    assign reg1_val = registers[read_addr1];  // Read value in register pointed at by read_addr1
+    assign reg2_val = registers[read_addr2];  // Read value in register pointed at by read_addr2
     assign br_value = registers[br_addr];   // Read value in register pointed at by br_addr
 
    

@@ -1,6 +1,6 @@
-module EXE(value1, value2, immediate, alu_oc, ir_op, result, wr_cpsr_val);
+module EXE(reg1_val, reg2_val, immediate, alu_oc, ir_op, result, wr_cpsr_val);
 
-    input [31:0]        value1, value2, immediate; 
+    input [31:0]        reg1_val, reg2_val, immediate; 
     input [2:0]         alu_oc;
     input               ir_op;
     output wire [32:0]  result;
@@ -21,10 +21,10 @@ module EXE(value1, value2, immediate, alu_oc, ir_op, result, wr_cpsr_val);
     always @(*)
     begin
 
-        op1 = value1;
+        op1 = reg1_val;
         if (ir_op)              // Loads immediate into the ALU on 0, and the register value on 1
         begin
-            op2 = value2;      // Loading value returned by Registers
+            op2 = reg2_val;      // Loading value returned by Registers
         end else
         begin
             op2 = immediate;   // Loading immediate value from ID
