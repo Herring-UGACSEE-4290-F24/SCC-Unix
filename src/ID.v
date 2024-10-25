@@ -2,7 +2,7 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, opcode, operand2, ir_op, re_cpsr_val, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
+module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_write_en, opcode, operand2, ir_op, re_cpsr_val, re_cpsr_val, re_pc_val, wr_pc_val, wr_pc, pc_mux);
 
     input [31:0]        instruction;   // Instruction passed in from Instruction Memory    
 
@@ -22,6 +22,12 @@ module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data,
     output reg          write_enable;  // Enable writing data to address
     output reg          wr_cpsr;       // Enable writing to the cpsr
 // =================================== //
+
+// FOR CONTROLLING IM/DM BUSSES AND SIGNALS //
+// ======================================== //
+    output [31:0]   data_addr;              // Controls the address of the data memory
+    output          data_write_en;          // Enables writing to the data memory
+// ======================================== //
 
 // FOR SENDING CONTROLS AND VALUES TO ALU //
 // ====================================== //
@@ -120,6 +126,7 @@ module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data,
         // -> then an instruction can set it's controls how it needs
         // -> avoids write_enable being left high (very bad)
         write_enable = 0;
+        data_write_en = 0;
         wr_cpsr = 0;
         wr_pc = 0;
         pc_mux = 0;
@@ -200,12 +207,12 @@ module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data,
          */
         case (instruction[31:25])
             LOAD: begin
-                // destination register -> write address on register file
-                // pointer register -> a read address on register file
-                // enable write on the register file
-                // add offset to value read at pointer address
-                // send sum to dataMem input address
-                // enable read from dataMem pass into write_data on register file
+                write_addr = dest_reg;                  // destination register -> write address on register file
+                read_addr1 = mem_ptr_reg;               // pointer register -> a read address on register file
+                write_data_sel = 0;                     // makes value come from the ID
+                write_enable = 1;                       // enable write on the register file
+                data_addr = reg1_val + imm;             // add offset to value read at pointer address and send sum to dataMem input address
+                data_write_en = 1;                      // enable read from dataMem pass into write_data on register file
             end
             STOR: begin
                 // source register -> a read address on register file
@@ -330,12 +337,14 @@ module ID(instruction, read_addr1, read_addr2, reg1_val, write_addr, write_data,
             LSL: begin
                 read_addr1 = shift_reg;                 // shift_reg -> a read address on register file
                 write_addr = dest_reg;                  // dest_reg -> a write address on register file
+                write_data_sel = 0;                     // data written comes from ID
                 write_data = reg1_val << imm;           // write the returned value with a bit-shift
                 write_enable = 1;                       // enable write on register
             end
             LSR: begin
                 read_addr1 = shift_reg;                 // shift_reg -> a read address on register file
                 write_addr = dest_reg;                  // dest_reg -> a write address on register file
+                write_data_sel = 0;                     // data written comes from ID
                 write_data = reg1_val >> imm;           // write the returned value with a bit-shift
                 write_enable = 1;                       // enable write on register
             end
