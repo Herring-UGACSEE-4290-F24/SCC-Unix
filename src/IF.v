@@ -2,9 +2,10 @@
  * This module defines the Instruction Fetch (IF) implementation by the Linux SCC group. IF keeps track
  * of the program counter (PC) which points to a word address in Instruction Memory (IM). 
  */
-module IF(clk, b_relAddr, write_enable, write_addr, write_value, br_value, instruction_in, instruction_out, br_addr, re_pc_val, wr_pc_val, wr_pc);
+module IF(clk, reset, b_relAddr, write_enable, write_addr, write_value, br_value, instruction_in, instruction_out, br_addr, re_pc_val, wr_pc_val, wr_pc);
 
     input               clk;                // Clock signal
+    input               reset;              // Reset signal
     input [15:0]        b_relAddr;          // Amount to branch relative to current PC
 
     input               write_enable;       // Signal sent from ID when the register files are being written to
@@ -23,6 +24,11 @@ module IF(clk, b_relAddr, write_enable, write_addr, write_value, br_value, instr
 
     reg [31:0]          offset;             // Amount to adjust the pc
     reg [31:0]          prefetch;           // Prefetching registers
+
+    always @(reset) begin
+        prefetch = 0;
+        instruction_out = 0;
+    end
 
     always @(posedge clk) begin
 
@@ -58,8 +64,6 @@ module IF(clk, b_relAddr, write_enable, write_addr, write_value, br_value, instr
     // - - - - - - - - - - - - - - - - - - - - - - - - - -  //
 
     // ==================================================== //
-
-    always @(posedge clk) begin
 
         instruction_out = prefetch;
         if (instruction_in[31:25] == 'b1100000) begin
