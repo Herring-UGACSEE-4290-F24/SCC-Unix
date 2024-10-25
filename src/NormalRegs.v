@@ -1,4 +1,4 @@
-module NormalRegs(read_addr1, read_addr2, br_addr, write_addr, write_value_alu, write_value_id, write_data_sel, write_enable, clk, reg1_val, reg2_val, br_value);
+module NormalRegs(reset, read_addr1, read_addr2, br_addr, write_addr, write_value_alu, write_value_id, write_data_sel, write_enable, clk, reg1_val, reg2_val, br_value);
 
     input reset;                            // Resets the values in the registers to zero
     input [2:0] read_addr1, read_addr2;     // Two ports for reading from registers (3 bits to address 8 registers)
