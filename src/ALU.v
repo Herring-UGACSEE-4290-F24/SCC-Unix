@@ -4,7 +4,7 @@ module ALU(operand1, operand2, opcode, res_out, overflow);
     // ALU inputs
     input [2:0] opcode;
     input [32:0] operand1; 
-    input [3:0] operand2;
+    input [32:0] operand2;
 
     // ALU outputs
     reg [32:0] result;

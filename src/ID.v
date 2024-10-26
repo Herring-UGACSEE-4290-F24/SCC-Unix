@@ -8,76 +8,76 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
     input               reset;         // Resets all main control lines
     output reg          halt_flag;     // Will halt the SCC
 
-//   FOR CONTROLLING REG_FILE SIGNALS  //
-// =================================== //
-// These signals will control what     //
-// data gets read and written to       //
-// the reg_file for the instruction    //
-// being decoded.                      //
-// - - - - - - - - - - - - - - - - - - //
-    output reg [2:0]    read_addr1;    // First address to read from
-    output reg [2:0]    read_addr2;    // Second address to read from
-    input [31:0]        reg1_val;      // Value at first address' reg
-    input [31:0]        reg2_val;      // Value at second address' reg
-    output reg [2:0]    write_addr;    // Address to write to
-    output reg [31:0]   write_data;    // Data to write at address
-    output reg          write_data_sel;// Determines if value being written to regs is from alu result or elsewhere
-    output reg          write_enable;  // Enable writing data to address
-    output reg          wr_cpsr;       // Enable writing to the cpsr
-// =================================== //
+    //   FOR CONTROLLING REG_FILE SIGNALS  //
+    // =================================== //
+    // These signals will control what     //
+    // data gets read and written to       //
+    // the reg_file for the instruction    //
+    // being decoded.                      //
+    // - - - - - - - - - - - - - - - - - - //
+    output reg [2:0]    read_addr1;        // First address to read from
+    output reg [2:0]    read_addr2;        // Second address to read from
+    input [31:0]        reg1_val;          // Value at first address' reg
+    input [31:0]        reg2_val;          // Value at second address' reg
+    output reg [2:0]    write_addr;        // Address to write to
+    output reg [31:0]   write_data;        // Data to write at address
+    output reg          write_data_sel;    // Determines if value being written to regs is from alu result or elsewhere
+    output reg          write_enable;      // Enable writing data to address
+    output reg          wr_cpsr;           // Enable writing to the cpsr
+    // =================================== //
 
-// FOR CONTROLLING IM/DM BUSSES AND SIGNALS //
-// ======================================== //
-    output reg [31:0]  data_addr;           // Controls the address of the data memory
-    input [31:0]       data_val;            // Value from memory
-    output reg         data_read;           // Enables reading to the data memory
-    output reg         data_write;          // Enables writing to data memory
-    output reg [31:0]  data_out;            // Value to write to data memory
-// ======================================== //
+    // FOR CONTROLLING IM/DM BUSSES AND SIGNALS //
+    // ======================================== //
+    output reg [31:0]  data_addr;               // Controls the address of the data memory
+    input [31:0]       data_val;                // Value from memory
+    output reg         data_read;               // Enables reading to the data memory
+    output reg         data_write;              // Enables writing to data memory
+    output reg [31:0]  data_out;                // Value to write to data memory
+    // ======================================== //
 
-// FOR SENDING CONTROLS AND VALUES TO ALU //
-// ====================================== //
-// These are either values for the ALU to //
-// operate on, or are control lines that  //
-// will change muxes that provide the val //
-// that the ALU uses.                     //
-// - - - - - - - - - - - - - - - - - - -  //
-    output reg [2:0]    opcode;           // Opcode for the ALU
-    output reg [31:0]   operand2;         // The second operand field of the ALU
-    output reg          ir_op;            // Instruction/Register operand (control bit)
-// ====================================== //
+    // FOR SENDING CONTROLS AND VALUES TO ALU //
+    // ====================================== //
+    // These are either values for the ALU to //
+    // operate on, or are control lines that  //
+    // will change muxes that provide the val //
+    // that the ALU uses.                     //
+    // - - - - - - - - - - - - - - - - - - -  //
+    output reg [2:0]    opcode;               // Opcode for the ALU
+    output reg [31:0]   operand2;             // The second operand field of the ALU
+    output reg          ir_op;                // Instruction/Register operand (control bit)
+    // ====================================== //
 
-// FOR BRANCH CONTROLLING //
-// ====================== //
-    input [31:0]        re_cpsr_val;        // Reads in the cpsr value
-    reg                 branch_condition;   // Holds if the branch condition has been met
-    input [31:0]        re_pc_val;          // Reads in the pc value
-    reg [31:0]          b_offset;           // Holds the offset for branches
-    output reg [31:0]   wr_pc_val;          // Value to write to the pc
-    output reg          wr_pc;              // Enable line to store into pc
-// ====================== //
+    // FOR BRANCH CONTROLLING //
+    // ====================== //
+    input [31:0]        re_cpsr_val;          // Reads in the cpsr value
+    reg                 branch_condition;     // Holds if the branch condition has been met
+    input [31:0]        re_pc_val;            // Reads in the pc value
+    reg [31:0]          b_offset;             // Holds the offset for branches
+    output reg [31:0]   wr_pc_val;            // Value to write to the pc
+    output reg          wr_pc;                // Enable line to store into pc
+    // ====================== //
 
-// BITFIELD AGRUMENT SPLITTING //
-// =========================== //
-// This just grabs each of the //
-// arguments in the bit fields //
-// in the instruction encoding //
-// - - - - - - - - - - - - - - //
-    wire [1:0]        fld;           // first-level-decode, bits 31-30
-    wire              s;             // special single bit for data instructions, bits 29
-    wire [3:0]        sld;           // single-level-decode, bits 28-25
-    wire [2:0]        alu_oc;        // opcode for ALU, bits 27-25
-    wire [2:0]        dest_reg;      // destination register, bits 24-22
-    wire [2:0]        mem_ptr_reg;   // pointer register for memory instructions, bits 21-19
-    wire [2:0]        br_ptr_reg;    // branch pointer, bits 24-22
-    wire [15:0]       offset;        // offset, bits 15-0
-    wire [2:0]        src_reg;       // register to store source address, bits 24-22
-    wire [15:0]       imm;           // immediate value, bits 15-0
-    wire [2:0]        op_1_reg;      // operand one, bits 21-19
-    wire [2:0]        op_2_reg;      // operand two, bits 18-16    
-    wire [2:0]        shift_reg;     // register that holds value for shifting, bits 21-19
-    wire [3:0]        cond_flags;    // condition flags for branching, bits 24-21
-// =========================== //
+    // BITFIELD AGRUMENT SPLITTING //
+    // =========================== //
+    // This just grabs each of the //
+    // arguments in the bit fields //
+    // in the instruction encoding //
+    // - - - - - - - - - - - - - - //
+    wire [1:0]        fld;         // first-level-decode, bits 31-30
+    wire              s;           // special single bit for data instructions, bits 29
+    wire [3:0]        sld;         // single-level-decode, bits 28-25
+    wire [2:0]        alu_oc;      // opcode for ALU, bits 27-25
+    wire [2:0]        dest_reg;    // destination register, bits 24-22
+    wire [2:0]        mem_ptr_reg; // pointer register for memory instructions, bits 21-19
+    wire [2:0]        br_ptr_reg;  // branch pointer, bits 24-22
+    wire [15:0]       offset;      // offset, bits 15-0
+    wire [2:0]        src_reg;     // register to store source address, bits 24-22
+    wire [15:0]       imm;         // immediate value, bits 15-0
+    wire [2:0]        op_1_reg;    // operand one, bits 21-19
+    wire [2:0]        op_2_reg;    // operand two, bits 18-16    
+    wire [2:0]        shift_reg;   // register that holds value for shifting, bits 21-19
+    wire [3:0]        cond_flags;  // condition flags for branching, bits 24-21
+    // =========================== //
 
     /*
      * The following are the (34) instructions defined as thier begining 7-bit encoding.
@@ -475,7 +475,7 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
                 write_enable = 1;                       // enable write on register
             end
             B: begin
-                wr_pc_val = re_pc_val + b_offset;       // write the value of the program counter + offset to pc
+                //wr_pc_val = re_pc_val + b_offset;       // write the value of the program counter + offset to pc
             end
             Bcond: begin
                 if (branch_condition) begin             // if condition (set in EXE) is met

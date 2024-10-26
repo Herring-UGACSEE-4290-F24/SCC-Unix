@@ -3,7 +3,7 @@ module EXE(reg1_val, reg2_val, immediate, alu_oc, ir_op, result, wr_cpsr_val);
     input [31:0]        reg1_val, reg2_val, immediate; 
     input [2:0]         alu_oc;
     input               ir_op;
-    output wire [32:0]  result;
+    output wire [31:0]  result;
 
     output reg [31:0]   wr_cpsr_val;
 

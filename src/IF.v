@@ -21,8 +21,13 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
     reg [31:0]          prefetch;           // Prefetching registers
 
     always @(reset) begin
-        prefetch = 0;
-        instruction_out = 0;
+        prefetch = 32'bx;
+        instruction_out = 32'bx;
+    end
+
+    always @(posedge clk) begin
+        instruction_out = prefetch;
+        prefetch = instruction_in;
     end
 
     always @(*) begin
@@ -55,7 +60,6 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
     // implement the pc as normal, 4 bytes per instruction. //
     // ==================================================== //
 
-        instruction_out = prefetch;
         if (instruction_in[31:25] == 7'b1100000) begin
 
             wr_pc_val = re_pc_val + offset;         // Update the pc based on the instruction's offset
@@ -71,7 +75,6 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
 
         end
         wr_pc_val[1:0] = 'b00;                          // Ensures 4 bytes alignment
-        prefetch = instruction_in;                  // Prefetches the next instruction from IM
 
     end
 
