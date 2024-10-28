@@ -1,15 +1,16 @@
 [*]
 [*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
-[*] Sat Oct 26 17:27:31 2024
+[*] Mon Oct 28 15:07:44 2024
 [*]
 [dumpfile] "/home/jakev/Fall24/ComputerArchitecture/SCC-Unix/dump.lx2"
-[dumpfile_mtime] "Sat Oct 26 17:27:04 2024"
-[dumpfile_size] 2512
-[savefile] "/home/jakev/Fall24/ComputerArchitecture/SCC-Unix/FULL_TB.gtkw"
+[dumpfile_mtime] "Mon Oct 28 15:06:55 2024"
+[dumpfile_size] 2463
+[savefile] "/home/jakev/Fall24/ComputerArchitecture/SCC-Unix/testsVer/config/FULL_TB.gtkw"
 [timestart] 0
 [size] 1366 670
 [pos] -1 -1
-*-7.104356 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.104356 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] FULL_TESTBENCH.unixSCC.
 [treeopen] FULL_TESTBENCH.unixSCC.executeModule.
 [sst_width] 247
 [signals_width] 238
@@ -17,7 +18,7 @@
 [sst_vpaned_height] 179
 @28
 FULL_TESTBENCH.clk_s[0]
-@23
+@22
 FULL_TESTBENCH.unixSCC.instructionFetch.instruction_out[31:0]
 @200
 -
@@ -31,11 +32,11 @@ FULL_TESTBENCH.unixSCC.normalRegisterFile.\nor_regs[4][31:0]
 FULL_TESTBENCH.unixSCC.normalRegisterFile.\nor_regs[5][31:0]
 FULL_TESTBENCH.unixSCC.normalRegisterFile.\nor_regs[6][31:0]
 FULL_TESTBENCH.unixSCC.normalRegisterFile.\nor_regs[7][31:0]
-FULL_TESTBENCH.unixSCC.specialRegisterFile.\spc_regs[0][31:0]
 @200
 -
 -Special Regs
 @22
+FULL_TESTBENCH.unixSCC.specialRegisterFile.\spc_regs[0][31:0]
 FULL_TESTBENCH.unixSCC.specialRegisterFile.\spc_regs[1][31:0]
 FULL_TESTBENCH.unixSCC.specialRegisterFile.\spc_regs[2][31:0]
 FULL_TESTBENCH.unixSCC.specialRegisterFile.\spc_regs[3][31:0]

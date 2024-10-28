@@ -78,5 +78,4 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
 
     end
 
-
 endmodule
