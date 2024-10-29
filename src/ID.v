@@ -483,8 +483,8 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
                 end
             end
             BR: begin
-                read_addr1 = br_ptr_reg;                // br_ptr_reg -> read address on reg file
-                wr_pc_val = reg1_val + b_offset;        // write the value of the program counter + offset to pc
+                //read_addr1 = br_ptr_reg;                // br_ptr_reg -> read address on reg file
+                //wr_pc_val = reg1_val + b_offset;        // write the value of the program counter + offset to pc
             end
             NOP: begin
                                                         // Does nothing, literally!

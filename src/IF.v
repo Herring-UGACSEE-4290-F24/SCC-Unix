@@ -28,9 +28,12 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
     always @(posedge clk) begin
         instruction_out = prefetch;
         prefetch = instruction_in;
+        if ((instruction_in[31:25] != 7'b1100000) & (instruction_in[31:25] != 7'b1100010)) begin
+            wr_pc_val = re_pc_val + 4;              // Increment the PC (4 byte alligned)
+        end
     end
 
-    always @(*) begin
+    always @(instruction_in) begin
 
     // FOR HANDLING THE IMMEDIATE/OFFSET FIELD IN B and BR //
     // =================================================== //
@@ -68,10 +71,6 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
 
             br_addr = instruction_in[24:22];        // Uses bitfield to fetch address of register
             wr_pc_val = br_value + offset;          // Update pc to address in the register pointed to by br_addr +/- the offset
-
-        end else begin
-
-            wr_pc_val = re_pc_val + 4;              // Increment the PC (4 byte alligned)
 
         end
         wr_pc_val[1:0] = 'b00;                          // Ensures 4 bytes alignment
