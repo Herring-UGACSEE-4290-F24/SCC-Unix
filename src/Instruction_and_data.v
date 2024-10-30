@@ -14,6 +14,7 @@ reg [7:0] memory [0:(2**16)-1] ; //Maximum array to hold both instruction and da
 
 initial begin
   $readmemh("output.mem", memory);
+  $dumpvars(0, memory[0], memory[1], memory[2], memory[3], memory[4], memory[5], memory[6], memory[7]); 
 end
 
 always @(instruction_memory_a) begin
@@ -38,7 +39,7 @@ always @(data_memory_a) begin
   end
 end
 
-always @(posedge mem_Clk) begin   // PROBLEM: this wasn't on *posedge* initially
+always @(mem_Clk) begin
   if(data_memory_write) begin //Store instruction
     memory[data_memory_a] <= data_memory_out_v[31:24];
     memory[data_memory_a+1] <= data_memory_out_v[23:16];

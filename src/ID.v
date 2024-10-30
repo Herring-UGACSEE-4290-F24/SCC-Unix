@@ -222,11 +222,11 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
             LOAD: begin
                 write_addr = dest_reg;                  // destination register -> write address on register file
                 read_addr1 = mem_ptr_reg;               // pointer register -> a read address on register file
+                data_addr = reg1_val + imm;             // add offset to value read at pointer address and send sum to dataMem input address
+                data_read = 1;                          // enable read from dataMem pass into write_data on register file
                 write_data = data_val;                  // write value from DM to the register
                 write_data_sel = 0;                     // makes value come from the ID
                 write_enable = 1;                       // enable write on the register file
-                data_addr = reg1_val + imm;             // add offset to value read at pointer address and send sum to dataMem input address
-                data_read = 1;                          // enable read from dataMem pass into write_data on register file
             end
             STOR: begin
                 read_addr1 = src_reg;                   // source register -> a read address on register file

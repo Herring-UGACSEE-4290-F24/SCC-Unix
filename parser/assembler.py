@@ -447,7 +447,7 @@ def assemble_opcode(dict):
                     continue
                 # Gets the arguments
                 for (index, arg) in enumerate(line["args"]):
-                    if arg.get("Reg"):
+                    if (arg.get("Reg") != None):
                         # Shifts the current op_code right 3 and adds the register
                         opcode = (opcode << 3)
                         opcode_len = opcode_len + 3
@@ -460,7 +460,7 @@ def assemble_opcode(dict):
                             print("I don't know how but you broke it. Line: ",line["line number"])
                             continue
                         # Encodes the flags
-                    elif arg.get("Flg"):
+                    elif (arg.get("Flg") != None):
                         # Shifts the op_code right 4 and adds the flag
                         try:
                             opcode = (opcode << 4 | condition_lookup[arg["Flg"].lower()])
@@ -472,7 +472,7 @@ def assemble_opcode(dict):
                             continue
                         opcode_len = opcode_len + 4
                         # Encodes the Immediate value
-                    elif arg.get("Imm"):
+                    elif (arg.get("Imm") != None):
                         # Shifts the op_code to make the immediate bits 15-0
                         offset = 32 - opcode_len
                         opcode = (opcode << offset)

@@ -19,5 +19,6 @@ main:
 	LSR R2, R2, #1		; R2 will have 5
 	CLR R2			; R2 will have 0
 	SET R2			; R2 will have -1
-	
+
+	B main			; Repeats
 	HALT
