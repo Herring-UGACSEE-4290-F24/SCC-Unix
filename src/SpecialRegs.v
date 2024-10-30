@@ -80,6 +80,7 @@ module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_da
     end
 
     always @(wr_pc_data) begin
+        #5;
         spc_regs[6] = wr_pc_data;
     end
 
