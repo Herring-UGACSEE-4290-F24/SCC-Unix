@@ -29,7 +29,7 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
     always @(posedge clk) begin
         instruction_out = prefetch;
         prefetch = instruction_in;
-        if ((instruction_in[31:25] != 7'b1100000) & (instruction_in[31:25] != 7'b1100010)) begin
+        if ((instruction_in[31:25] != 7'b1100000) && (instruction_in[31:25] != 7'b1100010) && (instruction_in[31:25] != 7'b1100001)) begin
             wr_pc_val = re_pc_val + 4;              // Increment the PC (4 byte alligned)
         end
     end

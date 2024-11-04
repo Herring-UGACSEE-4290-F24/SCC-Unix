@@ -13,11 +13,10 @@ module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, dat
     output wire          data_write;      // control writing data
 
     wire func_clk, halt, regWrite, write_pc_s, if_write_pc, id_write_pc, reg_data_sel, in_reg_s, wr_cpsr_s;
-    wire [31:0] instruction, if_pc_val, branchValue, reg1_val_s, reg_data, op2_s, cpsr_val, id_pc_val, reg2_val_s, alu_result, new_cpsr_val, new_pc_val, br_pc_val_s;
+    wire [31:0] instruction, if_pc_val, branchValue, reg1_val_s, reg_data, op2_s, cpsr_val, id_pc_val, reg2_val_s, alu_result, new_cpsr_val, br_pc_val_s, id_pc_val_s;
     wire [2:0] branchAddress, read_addr1_s, read_addr2_s, regAddr, alu_op_s;
 
     assign func_clk = clk & ~halt;
-    assign new_pc_val = if_pc_val | id_pc_val;
     assign write_pc_s = if_write_pc | id_write_pc;
     assign in_mem_en = 1;
 
@@ -54,8 +53,8 @@ module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, dat
                          .ir_op(in_reg_s), 
                          .re_cpsr_val(cpsr_val),  
                          .re_pc_val(in_mem_addr), 
-                         .wr_pc_val(id_pc_val), 
-                         .wr_pc(id_write_pc));
+                         .wr_pc(id_write_pc),
+                         .id_pc_val(id_pc_val_s));
 
     EXE executeModule(.reg1_val(reg1_val_s), 
                       .reg2_val(reg2_val_s), 
@@ -87,7 +86,7 @@ module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, dat
                                     .wr_r3_data(), 
                                     .wr_sp_data(), 
                                     .wr_lr_data(), 
-                                    .wr_pc_data(new_pc_val), 
+                                    .wr_pc_data(if_pc_val), 
                                     .wr_cpsr_data(new_cpsr_val), 
                                     .wr_usr_enable(), 
                                     .wr_zr(), 
@@ -110,6 +109,7 @@ module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, dat
                                     .re_pc(in_mem_addr), 
                                     .re_cpsr(cpsr_val), 
                                     .re_usr(),
-                                    .br_pc_val(br_pc_val_s));
+                                    .br_pc_val(br_pc_val_s),
+                                    .id_pc_val(id_pc_val_s));
 
 endmodule
