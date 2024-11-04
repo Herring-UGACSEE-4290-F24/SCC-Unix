@@ -133,7 +133,6 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
          */
         b_offset[31:16] = {16{instruction[15]}};          // Duplicates the msb (sign extension)
         b_offset[15:0] = instruction[15:0];               // Copying the immediate value
-        b_offset = b_offset * 4;                          // Left shifts (4 byte alligned)
 
         // Set every important control line to 0 (?)
         // -> then an instruction can set it's controls how it needs
@@ -480,6 +479,7 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
             Bcond: begin
                 if (branch_condition) begin             // if condition (set in EXE) is met
                     wr_pc_val = re_pc_val + b_offset;   // write the value of the program counter + offset to pc
+                    branch_condition = 0;
                 end
             end
             BR: begin

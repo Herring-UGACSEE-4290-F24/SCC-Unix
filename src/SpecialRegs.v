@@ -12,7 +12,7 @@
  */
 
 module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_data, wr_sp_data, wr_lr_data, wr_pc_data, wr_cpsr_data, wr_usr_enable, 
-                    wr_zr, wr_r1, wr_r2, wr_r3, wr_sp, wr_lr, wr_pc, wr_cpsr, write_usr_addr, read_usr_addr, clk, re_zr, re_r1, re_r2, re_r3, re_sp, re_lr, re_pc, re_cpsr, re_usr);
+                    wr_zr, wr_r1, wr_r2, wr_r3, wr_sp, wr_lr, wr_pc, wr_cpsr, write_usr_addr, read_usr_addr, clk, re_zr, re_r1, re_r2, re_r3, re_sp, re_lr, re_pc, re_cpsr, re_usr, br_pc);
 
     input reset;
     input [31:0] usr_data;                     // defining data lines
@@ -63,6 +63,8 @@ module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_da
     assign re_cpsr[31:0]   = spc_regs[7];
 
     assign re_usr = spc_regs[read_usr_addr];
+
+    input br_pc;
 
     initial begin                                                     // Sending stored values to waveform
         $dumpvars(0, spc_regs[0], spc_regs[1], spc_regs[2], spc_regs[3], spc_regs[4], spc_regs[5], spc_regs[6], spc_regs[7]);

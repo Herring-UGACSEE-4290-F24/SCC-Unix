@@ -12,7 +12,7 @@ module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, dat
     output wire          data_read;       // control reading data
     output wire          data_write;      // control writing data
 
-    wire func_clk, halt, regWrite, write_pc_s, if_write_pc, id_write_pc, reg_data_sel, in_reg_s, wr_cpsr_s;
+    wire func_clk, halt, regWrite, write_pc_s, if_write_pc, id_write_pc, reg_data_sel, in_reg_s, wr_cpsr_s, br_pc_s;
     wire [31:0] instruction, if_pc_val, branchValue, reg1_val_s, reg_data, op2_s, cpsr_val, id_pc_val, reg2_val_s, alu_result, new_cpsr_val, new_pc_val;
     wire [2:0] branchAddress, read_addr1_s, read_addr2_s, regAddr, alu_op_s;
 
@@ -29,7 +29,8 @@ module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, dat
                         .br_addr(branchAddress), 
                         .re_pc_val(in_mem_addr), 
                         .wr_pc_val(if_pc_val), 
-                        .wr_pc(if_write_pc));
+                        .wr_pc(if_write_pc),
+                        .br_pc(br_pc_s));
 
     ID instructionDecode(.instruction(instruction), 
                          .reset(reset_s), 
@@ -108,6 +109,7 @@ module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, dat
                                     .re_lr(), 
                                     .re_pc(in_mem_addr), 
                                     .re_cpsr(cpsr_val), 
-                                    .re_usr());
+                                    .re_usr(),
+                                    .br_pc(br_pc_s));
 
 endmodule
