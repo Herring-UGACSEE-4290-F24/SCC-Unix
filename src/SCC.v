@@ -6,7 +6,7 @@ module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, dat
     input [31:0]    data_in;         // data read from memory
 
     output wire [31:0]   in_mem_addr;     // address pointed to in instruction memory
-    output wire          in_mem_en;       // enable instruction memory fetch
+    output reg           in_mem_en = 1;   // enable instruction memory fetch
     output wire [31:0]   data_addr;       // address pointed to in data memory
     output wire [31:0]   data_out;        // data to write to memory
     output wire          data_read;       // control reading data
@@ -18,7 +18,9 @@ module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, dat
 
     assign func_clk = clk & ~halt;
     assign write_pc_s = if_write_pc | id_write_pc;
-    assign in_mem_en = 1;
+    always @(*) begin
+        in_mem_en = (~halt);
+    end
 
     IF instructionFetch(.clk(func_clk), 
                         .reset(reset_s),  

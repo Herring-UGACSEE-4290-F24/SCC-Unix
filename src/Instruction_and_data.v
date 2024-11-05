@@ -27,6 +27,7 @@ always @(instruction_memory_a) begin
 
   else if (~instruction_memory_en) begin //When low the SCC program pauses until set back to high which continues fetching instructions
     instruction_memory_v <= 'hFFFFFFFF;
+    $writememb("memory_out.mem", memory);
   end
 end
 

@@ -83,13 +83,13 @@ module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_da
     end
 
     always @(br_pc_val) begin
-        #5;
+        #10;
         spc_regs[6] = br_pc_val;
     end
 
     always @(id_pc_val) begin
         spc_regs[6] = id_pc_val;
-        #5;
+        #1;
     end
 
     always @(wr_pc_data) begin
