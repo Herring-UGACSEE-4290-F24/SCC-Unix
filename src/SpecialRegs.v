@@ -92,6 +92,10 @@ module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_da
         #5;
     end
 
+    always @(wr_pc_data) begin
+        spc_regs[6] = wr_pc_data;
+    end
+
     always @(posedge clk) begin                                        // static design controlled by rising clock edge
         if (wr_zr == 1) begin
             spc_regs[0] = wr_zr_data;
@@ -112,7 +116,7 @@ module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_da
             spc_regs[5] = wr_lr_data;
         end
         if (wr_pc == 1) begin
-            spc_regs[6] = wr_pc_data;
+            //spc_regs[6] = wr_pc_data;
         end
         if (wr_cpsr == 1) begin
             spc_regs[7] = wr_cpsr_data;

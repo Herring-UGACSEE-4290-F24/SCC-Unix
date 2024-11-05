@@ -32,6 +32,9 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
         if ((instruction_in[31:25] != 7'b1100000) && (instruction_in[31:25] != 7'b1100010) && (instruction_in[31:25] != 7'b1100001)) begin
             wr_pc_val = re_pc_val + 4;              // Increment the PC (4 byte alligned)
         end
+        if (instruction_out[31:25] == 7'b1100001) begin
+            prefetch = 'hC8000000;                  // Replace with NOP to prevent broken next instructions
+        end
     end
 
     always @(instruction_in) begin

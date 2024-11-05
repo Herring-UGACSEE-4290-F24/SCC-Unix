@@ -140,7 +140,6 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
         write_enable = 0;
         data_write = 0;
         wr_cpsr = 0;
-        wr_pc = 0;
         branch_condition = 0;
 
         /*
