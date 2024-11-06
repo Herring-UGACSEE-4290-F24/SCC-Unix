@@ -18,7 +18,7 @@ module FULL_TESTBENCH();
         $dumpvars(0, FULL_TESTBENCH);
         reset_s = 1;
         #10 reset_s = 0;
-        #1000;
+        #100000;
         $finish;
     end
 endmodule

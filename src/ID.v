@@ -133,6 +133,7 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
          */
         b_offset[31:16] = {16{instruction[15]}};          // Duplicates the msb (sign extension)
         b_offset[15:0] = instruction[15:0];               // Copying the immediate value
+        b_offset = b_offset - 4;                          // Undoing the pc increment
 
         // Set every important control line to 0 (?)
         // -> then an instruction can set it's controls how it needs
@@ -145,71 +146,73 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
         /*
          * Case statement to decide whether a branch should be taken
          */
-        case(cond_flags)
-            EQ: begin
-                if (re_cpsr_val[30] == 1) begin
-                    branch_condition = 1;
+        if (instruction[31:25] == 7'b1100001) begin
+            case(cond_flags)
+                EQ: begin
+                    if (re_cpsr_val[30] == 1) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            NE: begin
-                if (re_cpsr_val[30] == 0) begin
-                    branch_condition = 1;
+                NE: begin
+                    if (re_cpsr_val[30] == 0) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            CS: begin
-                if (re_cpsr_val[29] == 1) begin
-                    branch_condition = 1;
+                CS: begin
+                    if (re_cpsr_val[29] == 1) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            CC: begin
-                if (re_cpsr_val[29] == 0) begin
-                    branch_condition = 1;
+                CC: begin
+                    if (re_cpsr_val[29] == 0) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            MI: begin
-                if (re_cpsr_val[31] == 1) begin
-                    branch_condition = 1;
+                MI: begin
+                    if (re_cpsr_val[31] == 1) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            PL: begin
-                if (re_cpsr_val[31] == 0) begin
-                    branch_condition = 1;
+                PL: begin
+                    if (re_cpsr_val[31] == 0) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            VS: begin
-                if (re_cpsr_val[28] == 1) begin
-                    branch_condition = 1;
+                VS: begin
+                    if (re_cpsr_val[28] == 1) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            VC: begin
-                if (re_cpsr_val[28] == 0) begin
-                    branch_condition = 1;
+                VC: begin
+                    if (re_cpsr_val[28] == 0) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            HI: begin
-                if (re_cpsr_val[30] == 0 && re_cpsr_val[29] == 1) begin
-                    branch_condition = 1;
+                HI: begin
+                    if (re_cpsr_val[30] == 0 && re_cpsr_val[29] == 1) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            LS: begin
-                if (~(re_cpsr_val[30] == 0 && re_cpsr_val[29] == 1)) begin
-                    branch_condition = 1;
+                LS: begin
+                    if (~(re_cpsr_val[30] == 0 && re_cpsr_val[29] == 1)) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            GE: begin
-                if (re_cpsr_val[31] == re_cpsr_val[30]) begin
-                    branch_condition = 1;
+                GE: begin
+                    if (re_cpsr_val[31] == re_cpsr_val[30]) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            LT: begin
-                if (re_cpsr_val[31] != re_cpsr_val[30]) begin
-                    branch_condition = 1;
+                LT: begin
+                    if (re_cpsr_val[31] != re_cpsr_val[30]) begin
+                        branch_condition = 1;
+                    end
                 end
-            end
-            default: begin
-                branch_condition = 0;
-            end
-        endcase
+                default: begin
+                    branch_condition = 0;
+                end
+            endcase
+        end
 
         /*
          * Case statement to check the most significant 7-bits 
