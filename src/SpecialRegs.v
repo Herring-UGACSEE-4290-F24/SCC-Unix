@@ -9,17 +9,12 @@
  * R5 --> Link Register (LR)
  * R6 --> Program Counter (PC)
  * R7 --> CPSR (NZCV....+)
- * 
- * Jake's thoughts: 
- * -----------------------------------
- *  - Design mostly as single port write, single port read 
- *  - Should be channels where there is direct access to CPSR & PC
- *  - We don't need direct access to the LR, BL 
  */
 
-module Reg_File_2(usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_data, wr_sp_data, wr_lr_data, wr_pc_data, wr_cpsr_data, wr_usr_enable, wr_zr, wr_r1, wr_r2, wr_r3, wr_sp, wr_lr, wr_pc, wr_cpsr,
-                 write_usr_addr, read_usr_addr, clk, re_zr, re_r1, re_r2, re_r3, re_sp, re_lr, re_pc, re_cpsr, re_usr);
-    
+module SpecialRegs(reset, usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_data, wr_sp_data, wr_lr_data, wr_pc_data, wr_cpsr_data, wr_usr_enable, 
+                    wr_zr, wr_r1, wr_r2, wr_r3, wr_sp, wr_lr, wr_pc, wr_cpsr, write_usr_addr, read_usr_addr, clk, re_zr, re_r1, re_r2, re_r3, re_sp, re_lr, re_pc, re_cpsr, re_usr, br_pc_val, id_pc_val);
+
+    input reset;
     input [31:0] usr_data;                     // defining data lines
     input [31:0] wr_zr_data;
     input [31:0] wr_r1_data;
@@ -45,7 +40,7 @@ module Reg_File_2(usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_data, wr_s
 
     input clk;
 
-    reg [31:0] regs [0:7];  
+    reg [31:0] spc_regs [0:7];  
 
     output wire [31:0] re_zr;
     output wire [31:0] re_r1;
@@ -58,49 +53,77 @@ module Reg_File_2(usr_data, wr_zr_data, wr_r1_data, wr_r2_data, wr_r3_data, wr_s
 
     output wire [31:0] re_usr;
 
-    assign re_zr = regs[0];
-    assign re_r1 = regs[1];
-    assign re_r2 = regs[2];
-    assign re_r3 = regs[3];
-    assign re_sp = regs[4];
-    assign re_lr = regs[5];
-    assign re_pc = regs[6];
-    assign re_cpsr = regs[7];
+    assign   re_zr[31:0]   = spc_regs[0];
+    assign   re_r1[31:0]   = spc_regs[1];
+    assign   re_r2[31:0]   = spc_regs[2];
+    assign   re_r3[31:0]   = spc_regs[3];
+    assign   re_sp[31:0]   = spc_regs[4];
+    assign   re_lr[31:0]   = spc_regs[5];
+    assign   re_pc[31:0]   = spc_regs[6];
+    assign re_cpsr[31:0]   = spc_regs[7];
 
-    assign re_usr = regs[read_usr_addr];
+    assign re_usr = spc_regs[read_usr_addr];
+
+    input [31:0] br_pc_val;
+    input [31:0] id_pc_val;
 
     initial begin                                                     // Sending stored values to waveform
-        $dumpvars(0, regs[0], regs[1], regs[2], regs[3], regs[4], regs[5], regs[6], regs[7]);
+        $dumpvars(0, spc_regs[0], spc_regs[1], spc_regs[2], spc_regs[3], spc_regs[4], spc_regs[5], spc_regs[6], spc_regs[7]);
+    end
+
+    always @(reset) begin
+        spc_regs[0] <= 0;
+        spc_regs[1] <= 0;
+        spc_regs[2] <= 0;
+        spc_regs[3] <= 0;
+        spc_regs[4] <= 0;
+        spc_regs[5] <= 0;
+        spc_regs[6] <= 0;
+        spc_regs[7] <= 0;
+    end
+
+    always @(br_pc_val) begin
+        #10;
+        spc_regs[6] = br_pc_val;
+    end
+
+    always @(id_pc_val) begin
+        spc_regs[6] = id_pc_val;
+        #1;
+    end
+
+    always @(wr_pc_data) begin
+        spc_regs[6] = wr_pc_data;
     end
 
     always @(posedge clk) begin                                        // static design controlled by rising clock edge
         if (wr_zr == 1) begin
-            regs[0] <= wr_zr_data;
+            spc_regs[0] = wr_zr_data;
         end
         if (wr_r1 == 1) begin
-            regs[1] <= wr_r1_data;
+            spc_regs[1] = wr_r1_data;
         end
         if (wr_r2 == 1) begin
-            regs[2] <= wr_r2_data;
+            spc_regs[2] = wr_r2_data;
         end
         if (wr_r3 == 1) begin
-            regs[3] <= wr_r3_data;
+            spc_regs[3] = wr_r3_data;
         end
         if (wr_sp == 1) begin
-            regs[4] <= wr_sp_data;
+            spc_regs[4] = wr_sp_data;
         end
         if (wr_lr == 1) begin
-            regs[5] <= wr_lr_data;
+            spc_regs[5] = wr_lr_data;
         end
         if (wr_pc == 1) begin
-            regs[6] <= wr_pc_data;
+            //spc_regs[6] = wr_pc_data;
         end
         if (wr_cpsr == 1) begin
-            regs[7] <= wr_cpsr_data;
+            spc_regs[7] = wr_cpsr_data;
         end
-         
+
         if (wr_usr_enable == 1) begin
-            regs[write_usr_addr] <= usr_data;
+            spc_regs[write_usr_addr] = usr_data;
         end 
 
     end    
