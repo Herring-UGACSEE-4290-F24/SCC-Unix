@@ -13,7 +13,7 @@ main:
 	AND R2, R0, R1		; R2 will have 1
 	OR R2, R0, R1		; R2 will have 5
 	XOR R2, R0, R1		; R2 will have 4
-	NOT R2, R0 			; R2 will have -6 (i think)
+	NOT R2, R0 			; R2 will have -6 
 
 	LSL R2, R0, #1		; R2 will have 10
 	LSR R2, R2, #1		; R2 will have 5

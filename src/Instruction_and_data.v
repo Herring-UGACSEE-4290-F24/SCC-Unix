@@ -20,7 +20,7 @@ end
 always @(instruction_memory_en) begin
   if (~instruction_memory_en) begin
     $display("Should write out file?");
-    $writememb("memory_out.txt", memory);
+    $writememb("memoryOut.txt", memory);
   end
 end
 
