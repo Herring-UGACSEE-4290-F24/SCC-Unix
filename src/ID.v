@@ -2,7 +2,7 @@
  * This module is the implementation for the Instruction Decoder.
  */
 
-module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_val, data_read, data_write, data_out, opcode, operand2, ir_op, re_cpsr_val, re_pc_val, id_pc_val, wr_pc);
+module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_val, write_addr, write_data, write_data_sel, write_enable, wr_cpsr, data_addr, data_val, data_read, data_write, data_out, opcode, operand2, ir_op, re_cpsr_val, re_pc_val, id_pc_val, wr_pc, branch);
 
     input [31:0]        instruction;   // Instruction passed in from Instruction Memory 
     input               reset;         // Resets all main control lines
@@ -55,6 +55,7 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
     reg [31:0]          b_offset;             // Holds the offset for branches
     output reg [31:0]   id_pc_val;            // Value to write to the pc
     output reg          wr_pc;                // Enable line to store into pc
+    output reg          branch;               // Tells IF when a branch is happening
     // ====================== //
 
     // BITFIELD AGRUMENT SPLITTING //
@@ -133,7 +134,6 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
          */
         b_offset[31:16] = {16{instruction[15]}};          // Duplicates the msb (sign extension)
         b_offset[15:0] = instruction[15:0];               // Copying the immediate value
-        b_offset = b_offset - 4;                          // Undoing the pc increment
 
         // Set every important control line to 0 (?)
         // -> then an instruction can set it's controls how it needs
@@ -142,6 +142,7 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
         data_write = 0;
         wr_cpsr = 0;
         branch_condition = 0;
+        branch = 0;
 
         /*
          * Case statement to decide whether a branch should be taken
@@ -479,8 +480,11 @@ module ID(instruction, reset, halt_flag, read_addr1, read_addr2, reg1_val, reg2_
             end
             Bcond: begin
                 if (branch_condition) begin             // if condition (set in EXE) is met
+                    branch = 1;
                     id_pc_val = re_pc_val + b_offset;   // write the value of the program counter + offset to pc
                     branch_condition = 0;
+                end else begin
+                    id_pc_val = re_pc_val + 4;
                 end
             end
             BR: begin

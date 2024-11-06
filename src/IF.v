@@ -2,7 +2,7 @@
  * This module defines the Instruction Fetch (IF) implementation by the Linux SCC group. IF keeps track
  * of the program counter (PC) which points to a word address in Instruction Memory (IM). 
  */
-module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_val, wr_pc_val, wr_pc, br_pc_val);
+module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_val, wr_pc_val, wr_pc, br_pc_val, branch);
 
     input               clk;                // Clock signal
     input               reset;              // Reset signal
@@ -17,6 +17,7 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
     output reg [31:0]   wr_pc_val = 32'b0;  // Program Counter: points to an address in instruction memory
     output reg          wr_pc = 1;          // Enables writing to the PC register (in special regs)
     output reg [31:0]   br_pc_val;          // Value to write to PC on branch 
+    input               branch;             // if a cond branch is being taken
 
     reg [31:0]          offset;             // Amount to adjust the pc
     reg [31:0]          prefetch;           // Prefetching registers
@@ -29,8 +30,10 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
     always @(posedge clk) begin
         instruction_out = prefetch;
         prefetch = instruction_in;
-        wr_pc_val = re_pc_val + 4;              // Increment the PC (4 byte alligned)
-        if (instruction_out[31:25] == 7'b1100001) begin
+        if ((instruction_in[31:25] != 7'b1100000) && (instruction_in[31:25] != 7'b1100010) && (instruction_out[31:25] != 7'b1100001)) begin
+            wr_pc_val = re_pc_val + 4;              // Increment the PC (4 byte alligned)
+        end
+        if (instruction_out[31:25] == 7'b1100001 && branch == 1) begin
             prefetch = 'hC8000000;                  // Replace with NOP to prevent broken next instructions
         end
     end
@@ -67,12 +70,20 @@ module IF(clk, reset, br_value, instruction_in, instruction_out, br_addr, re_pc_
 
         if (instruction_in[31:25] == 7'b1100000) begin
 
-            br_pc_val = re_pc_val + offset;         // Update the pc based on the instruction's offset
+            if (prefetch[31:25] == 7'b1100001) begin
+                
+            end else begin
+                br_pc_val = re_pc_val + offset;         // Update the pc based on the instruction's offset
+            end
 
         end else if (instruction_in[31:25] == 7'b1100010) begin
 
-            br_addr = instruction_in[24:22];        // Uses bitfield to fetch address of register
-            br_pc_val = br_value + offset;          // Update pc to address in the register pointed to by br_addr +/- the offset
+            if (prefetch [31:25] == 7'b1100001) begin
+
+            end else begin
+                br_addr = instruction_in[24:22];        // Uses bitfield to fetch address of register
+                br_pc_val = br_value + offset;          // Update pc to address in the register pointed to by br_addr +/- the offset
+            end
 
         end
         br_pc_val[1:0] = 'b00;                      // Ensures 4 bytes alignment
