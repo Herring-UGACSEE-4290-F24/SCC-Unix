@@ -34,5 +34,9 @@ skipa:
 	SET R1				; R1 will have -1
 	SET R2				; R2 will have -1
 skipb:
-	MOV R0, #1			; R0 will have 1
+	MOV R0, #4			; R0 will have 4
+	MOV R1, #12			; R1 will have 12
+	XOR R2, R1, R0		; R2 will have 8
+	CLR R2				; R2 will have 0
+	XOR R2, R1, #4		; R2 will have 8
 	HALT

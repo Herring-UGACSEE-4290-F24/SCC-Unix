@@ -17,6 +17,13 @@ initial begin
   $dumpvars(0, memory[0], memory[1], memory[2], memory[3], memory[4], memory[5], memory[6], memory[7]); 
 end
 
+always @(instruction_memory_en) begin
+  if (~instruction_memory_en) begin
+    $display("Should write out file?");
+    $writememb("memory_out.txt", memory);
+  end
+end
+
 always @(instruction_memory_a) begin
   if(instruction_memory_en)begin //Grabs 32 bit instruction
     instruction_memory_v[31:24] <= memory[instruction_memory_a];
@@ -27,7 +34,6 @@ always @(instruction_memory_a) begin
 
   else if (~instruction_memory_en) begin //When low the SCC program pauses until set back to high which continues fetching instructions
     instruction_memory_v <= 'hFFFFFFFF;
-    $writememb("memory_out.mem", memory);
   end
 end
 
