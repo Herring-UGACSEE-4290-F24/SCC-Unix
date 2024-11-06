@@ -1,4 +1,4 @@
-module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, data_out, data_read, data_write);
+module SCC(clk, reset_s);
 
     input           clk;             // main clock signal
     input           reset_s;         // sets all regs to known state
@@ -113,5 +113,15 @@ module SCC(clk, reset_s, in_mem, data_in, in_mem_addr, in_mem_en, data_addr, dat
                                     .re_usr(),
                                     .br_pc_val(br_pc_val_s),
                                     .id_pc_val(id_pc_val_s));
+
+    Instruction_and_data memoryModel(.mem_Clk(clk), 
+                                     .instruction_memory_en(in_mem_en), 
+                                     .instruction_memory_a(in_mem_addr), 
+                                     .data_memory_a(data_addr), 
+                                     .data_memory_read(data_read), 
+                                     .data_memory_write(data_write), 
+                                     .data_memory_out_v(data_out), 
+                                     .instruction_memory_v(in_mem), 
+                                     .data_memory_in_v(data_in));
 
 endmodule
