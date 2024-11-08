@@ -1,0 +1,1 @@
+/home/jakev/Fall24/ComputerArchitecture/SCC-Unix/Emulator/target/debug/Class-ISA-Emulator: /home/jakev/Fall24/ComputerArchitecture/SCC-Unix/Emulator/src/emulator.rs /home/jakev/Fall24/ComputerArchitecture/SCC-Unix/Emulator/src/main.rs /home/jakev/Fall24/ComputerArchitecture/SCC-Unix/Emulator/src/ui.rs

@@ -10,6 +10,9 @@ input wire [31:0] data_memory_out_v;
 output reg [31:0] instruction_memory_v;
 output reg [31:0] data_memory_in_v;
 
+integer i;
+integer file;
+
 reg [7:0] memory [0:(2**16)-1] ; //Maximum array to hold both instruction and data memory
 
 initial begin
@@ -19,11 +22,33 @@ end
 
 always @(instruction_memory_en) begin
   if (~instruction_memory_en) begin
-    $display("Should write out file?");
-    $writememb("memoryOut.txt", memory);
+        
   end
 end
 
+always @(negedge instruction_memory_en) begin
+  // Open a file for writing
+  file = $fopen("scc_dump.csv", "w");
+  if (file == 0) begin
+    $display("Error: Could not open file.");
+    $finish;
+  end
+
+  // Write header for CSV file
+  $fwrite(file, "Address,Value\n");
+
+  // Write memory contents to the CSV file
+  for (i = 0; i < (2**16)-1; i = i + 4) begin
+    $fwrite(file, "0x%8h,0x%2h%2h%2h%2h\n", i, memory[i], memory[i+1], memory[i+2], memory[i+3]);
+  end
+
+  // Close the file
+  $fclose(file);
+
+  $display("Memory contents dumped to memory_dump.csv");
+  $finish;
+end
+   
 always @(instruction_memory_a) begin
   if(instruction_memory_en)begin //Grabs 32 bit instruction
     instruction_memory_v[31:24] <= memory[instruction_memory_a];
